@@ -171,3 +171,13 @@ body {
     transform: translateX(-100%);
   }
 }
+
+@keyframes nv-nudge {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(3px); }
+}
+
+@keyframes nv-cycle {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}

@@ -14,7 +14,7 @@ type Props = {
 
 const styles = {
   primary:
-    "bg-titanium-50 text-void hover:bg-white shadow-[0_0_0_1px_rgb(255_255_255/0.4),0_10px_40px_-10px_rgb(47_123_255/0.55)]",
+    "bg-titanium-50 text-void hover:bg-white",
   ghost:
     "text-titanium-100 border border-hairline-strong hover:border-volt/60 hover:text-white bg-white/[0.02] backdrop-blur-sm",
 };

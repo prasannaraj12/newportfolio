@@ -1,9 +1,10 @@
 import { Nav } from "@/components/ui/Nav";
 import { Hero } from "@/components/hero/Hero";
-import { About } from "@/components/sections/About";
-import { Projects } from "@/components/sections/Projects";
-import { Skills } from "@/components/sections/Skills";
-import { Achievements } from "@/components/sections/Achievements";
+import { Perspective } from "@/components/sections/Perspective";
+import { Journey } from "@/components/sections/Journey";
+import { Laboratory } from "@/components/lab/Laboratory";
+import { Intelligence } from "@/components/sections/Intelligence";
+import { Recognition } from "@/components/sections/Recognition";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
@@ -12,10 +13,11 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <About />
-        <Projects />
-        <Skills />
-        <Achievements />
+        <Perspective />
+        <Journey />
+        <Laboratory />
+        <Intelligence />
+        <Recognition />
         <Contact />
       </main>
     </>

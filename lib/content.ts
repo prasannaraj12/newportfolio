@@ -176,10 +176,75 @@ export const achievements = {
   ],
 } as const;
 
+export const hero = {
+  lineOne: "I build things",
+  lineTwo: "that think.",
+  role: "AI Engineer",
+  tagline: "Building Intelligent, Real-World AI Solutions.",
+} as const;
+
+export const resumeUrl = "/Prasanna-Raj-R-Resume.pdf";
+
+export const portraits = {
+  hero: { src: "/images/portraits/edit/hero.webp", w: 548, h: 470 },
+  monochrome: { src: "/images/portraits/edit/monochrome.webp", w: 796, h: 470 },
+  doubleExposure: { src: "/images/portraits/edit/double-exposure.webp", w: 836, h: 451 },
+  studio: { src: "/images/portraits/edit/studio.webp", w: 814, h: 451 },
+} as const;
+
+/** Perspective statements — each one maps to work listed in the résumé. */
+export const perspective = [
+  { lead: "Agents", rest: "that reason.", ref: "AgentDB — LangGraph ReAct" },
+  { lead: "Models", rest: "that adapt.", ref: "Qwen — QLoRA / PEFT" },
+  { lead: "Pipelines", rest: "that keep watch.", ref: "CrawlNews — 15-minute cycle" },
+] as const;
+
 export const nav = [
-  { id: "about", label: "About" },
-  { id: "work", label: "Projects" },
-  { id: "skills", label: "Skills" },
-  { id: "achievements", label: "Achievements" },
-  { id: "contact", label: "Contact" },
+  { id: "perspective", label: "Perspective", n: "01" },
+  { id: "journey", label: "Journey", n: "02" },
+  { id: "laboratory", label: "Laboratory", n: "03" },
+  { id: "intelligence", label: "Intelligence", n: "04" },
+  { id: "recognition", label: "Recognition", n: "05" },
+  { id: "connection", label: "Connection", n: "06" },
+] as const;
+
+/* ───────────── Exhibition diagram data (Laboratory) ───────────── */
+
+export const agentdbTools = [
+  { id: "schema", name: "Schema reader", does: "Reads tables and columns of the connected SQLite database." },
+  { id: "sql", name: "SQL executor", does: "Runs the query the agent composed and returns rows." },
+  { id: "chart", name: "Chart generator", does: "Turns result sets into charts." },
+  { id: "diagram", name: "Diagram renderer", does: "Renders database structure as a diagram." },
+  { id: "insight", name: "Insight generator", does: "Summarizes what the results mean." },
+] as const;
+
+export const qwenStages = [
+  { id: "base", name: "Open-weight Qwen", tool: "Hugging Face Transformers", does: "Load the base model; its weights stay frozen." },
+  { id: "quant", name: "4-bit quantization", tool: "bitsandbytes", does: "Quantize the frozen weights to 4-bit to cut memory." },
+  { id: "lora", name: "LoRA adapters", tool: "PEFT", does: "Attach small low-rank adapter matrices — the only trainable parameters." },
+  { id: "sft", name: "Supervised fine-tuning", tool: "TRL · Unsloth", does: "Train the adapters on instruction data (QLoRA)." },
+  { id: "deploy", name: "Validate & deploy", tool: "Inference", does: "Validate outputs, then deploy for optimized inference." },
+] as const;
+
+export const crawlStages = [
+  { id: "collect", name: "Collect", does: "Pull articles from 31 RSS sources." },
+  { id: "dedupe", name: "Deduplicate", does: "Drop repeated stories." },
+  { id: "cluster", name: "Cluster", does: "Group articles into events." },
+  { id: "filter", name: "Filter", does: "Keep what is relevant." },
+  { id: "verify", name: "Verify", does: "Fact-verification stage." },
+  { id: "summarize", name: "Summarize", does: "LLM-based summaries." },
+] as const;
+
+export const rymLayers = [
+  { id: "client", name: "Client", tech: "Flutter" },
+  { id: "api", name: "API", tech: "Node.js · Express" },
+  { id: "data", name: "Data & auth", tech: "PostgreSQL · Firebase" },
+] as const;
+
+export const rymTrust = [
+  { id: "kyc", name: "KYC", does: "Identity verification." },
+  { id: "selfie", name: "Selfie check", does: "Selfie verification against the profile." },
+  { id: "roles", name: "Role-based access", does: "Permissions scoped per role." },
+  { id: "booking", name: "Booking", does: "Secure booking workflow." },
+  { id: "payment", name: "Payment", does: "Secure payment workflow." },
 ] as const;

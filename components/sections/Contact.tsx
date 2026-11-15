@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check, Copy, Mail, Phone } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { profile } from "@/lib/content";
+import { portraits, profile, resumeUrl } from "@/lib/content";
 import { MagneticLink } from "@/components/ui/MagneticLink";
 import { SplitChars } from "@/components/ui/SplitChars";
 
@@ -47,25 +48,41 @@ export function Contact() {
   };
 
   return (
-    <section ref={root} id="contact" className="relative overflow-hidden pb-10 pt-28 md:pt-40">
+    <section ref={root} id="connection" aria-label="Connection" className="relative overflow-hidden bg-void pb-10 pt-28 md:pt-40">
+      {/* Studio portrait — a quiet presence behind the closing words */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%]"
-        style={{ background: "radial-gradient(60% 70% at 50% 100%, rgb(47 123 255 / 0.13), transparent 70%)" }}
-      />
+        className="pointer-events-none absolute right-0 top-0 h-[62%] w-full opacity-60 md:h-[88%] md:w-[62%]"
+        style={{
+          maskImage:
+            "linear-gradient(to right, transparent, black 45%), linear-gradient(to bottom, black 55%, transparent)",
+          maskComposite: "intersect",
+        }}
+      >
+        <Image
+          src={portraits.studio.src}
+          alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 62vw"
+          className="object-cover grayscale-[0.85] brightness-[0.75]"
+          style={{ objectPosition: "52% 20%" }}
+        />
+      </div>
       <div className="container-noir relative">
         <p className="label mb-8 flex items-center gap-3">
-          <span className="text-volt-bright">05</span> Contact
+          <span className="text-volt-bright">06</span>
+          <span className="h-px w-8 bg-titanium-500" />
+          Connection
         </p>
 
         <h2
           data-cta
-          className="font-display font-semibold leading-[0.9] tracking-[-0.05em] text-titanium-50"
-          style={{ fontSize: "clamp(3rem, 10vw, 10rem)" }}
+          className="max-w-[12ch] font-display font-semibold leading-[0.9] tracking-[-0.05em] text-titanium-50 mt-[24svh] md:mt-0"
+          style={{ fontSize: "clamp(3rem, 9vw, 9.5rem)" }}
         >
           <SplitChars text="Let's build" charClass="text-titanium" />
           <span className="split-line">
-            <span data-char className="split-inner font-serif font-normal italic tracking-[-0.02em] text-volt-gradient">
+            <span data-char className="split-inner font-serif font-normal italic tracking-[-0.02em] text-titanium-100">
               intelligent
             </span>
           </span>
@@ -112,6 +129,9 @@ export function Contact() {
             </MagneticLink>
             <MagneticLink href={profile.links.github} external>
               GitHub <ArrowUpRight className="size-4" />
+            </MagneticLink>
+            <MagneticLink href={resumeUrl} external>
+              Résumé <ArrowUpRight className="size-4" />
             </MagneticLink>
             <MagneticLink href={`tel:${profile.links.phone.replace(/\s/g, "")}`} external={false}>
               <Phone className="size-4" /> Call

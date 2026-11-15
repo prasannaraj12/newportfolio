@@ -62,29 +62,29 @@ export function Nav() {
             aria-label="Primary"
           >
             <a href="#top" onClick={go("top")} className="group flex items-center gap-2.5">
-              <span className="relative grid size-7 place-items-center rounded-full border border-hairline-strong">
-                <span className="size-2 rounded-full bg-volt shadow-[0_0_12px_2px_rgb(47_123_255/0.8)]" />
-              </span>
-              <span className="font-mono text-[0.72rem] tracking-[0.3em] text-titanium-100">NEURALVERSE</span>
+              <span className="font-serif text-xl italic leading-none text-titanium-50">PR</span>
+              <span className="h-4 w-px rotate-[20deg] bg-volt-bright" />
+              <span className="font-mono text-[0.68rem] tracking-[0.3em] text-titanium-300 transition-colors group-hover:text-titanium-50">NEURALVERSE</span>
             </a>
 
-            <ul className="hidden items-center gap-1 md:flex">
+            <ul className="hidden items-center gap-1 lg:flex">
               {nav.map((n) => (
                 <li key={n.id}>
                   <a
                     href={`#${n.id}`}
                     onClick={go(n.id)}
-                    className={`relative rounded-full px-3.5 py-1.5 text-[0.82rem] transition-colors ${
+                    className={`relative flex items-baseline gap-1.5 px-3 py-1.5 text-[0.8rem] transition-colors ${
                       current === n.id ? "text-white" : "text-titanium-400 hover:text-titanium-100"
                     }`}
                   >
                     {current === n.id && (
                       <motion.span
                         layoutId="nav-pill"
-                        className="absolute inset-0 -z-10 rounded-full bg-white/[0.06] ring-1 ring-hairline-strong"
+                        className="absolute inset-x-3 -bottom-0.5 h-px bg-volt-bright"
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
                       />
                     )}
+                    <span className="font-mono text-[0.58rem] text-titanium-500">{n.n}</span>
                     {n.label}
                   </a>
                 </li>
@@ -93,7 +93,7 @@ export function Nav() {
 
             <button
               type="button"
-              className="grid size-9 place-items-center rounded-full border border-hairline-strong text-titanium-100 md:hidden"
+              className="grid size-9 place-items-center rounded-full border border-hairline-strong text-titanium-100 lg:hidden"
               onClick={() => setOpen((o) => !o)}
               aria-expanded={open}
               aria-label={open ? "Close menu" : "Open menu"}
@@ -111,7 +111,7 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 bg-void/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-40 bg-void/95 backdrop-blur-xl lg:hidden"
           >
             <ul className="container-noir flex h-full flex-col justify-center gap-2">
               {nav.map((n, i) => (
@@ -124,9 +124,9 @@ export function Nav() {
                   <a
                     href={`#${n.id}`}
                     onClick={go(n.id)}
-                    className="flex items-baseline gap-4 py-2 font-display text-5xl font-semibold tracking-tight text-titanium-100"
+                    className="flex items-baseline gap-4 py-2 font-serif text-5xl italic tracking-tight text-titanium-100"
                   >
-                    <span className="font-mono text-xs text-volt-bright">0{i + 1}</span>
+                    <span className="font-mono text-xs text-volt-bright">{n.n}</span>
                     {n.label}
                   </a>
                 </motion.li>
