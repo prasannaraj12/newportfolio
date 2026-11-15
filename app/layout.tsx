@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
+import { Bodoni_Moda, Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono, Mrs_Saint_Delafield, Newsreader } from "next/font/google";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
 
@@ -33,10 +33,17 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+const signature = Mrs_Saint_Delafield({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-mrs-saint",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Prasanna Raj R — AI Engineer",
   description:
-    "Prasanna Raj R — AI Engineer. Ideas into intelligence: agentic AI, LLM fine-tuning and real-world AI systems.",
+    "Prasanna Raj R — AI Engineer. I turn ambitious ideas into intelligent systems: agentic AI, LLM fine-tuning and real-world AI products.",
   openGraph: {
     title: "Prasanna Raj R — AI Engineer",
     description: "Ideas into intelligence: agentic AI, LLM fine-tuning and real-world AI systems.",
@@ -45,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5f0e8",
+  themeColor: "#f5efe6",
   colorScheme: "light",
 };
 
@@ -53,7 +60,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${bodoni.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable}`}
+      className={`${bricolage.variable} ${bodoni.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable} ${signature.variable}`}
     >
       <body>
         <SmoothScroll>{children}</SmoothScroll>

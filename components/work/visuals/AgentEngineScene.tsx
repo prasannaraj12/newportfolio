@@ -33,9 +33,9 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
   const mats = useMemo(() => {
     const stone = new THREE.MeshStandardMaterial({ color: "#efe7dc", roughness: 0.85 });
     const stoneDark = new THREE.MeshStandardMaterial({ color: "#e3d8ca", roughness: 0.9 });
-    const lacquer = new THREE.MeshPhysicalMaterial({ color: "#782d40", roughness: 0.32, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.12 });
-    const brass = new THREE.MeshStandardMaterial({ color: "#b99265", metalness: 1, roughness: 0.3, envMapIntensity: 1.3 });
-    const top = new THREE.MeshStandardMaterial({ color: "#782d40", roughness: 0.5 });
+    const lacquer = new THREE.MeshPhysicalMaterial({ color: "#702c40", roughness: 0.32, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.12 });
+    const brass = new THREE.MeshStandardMaterial({ color: "#c6a77b", metalness: 1, roughness: 0.3, envMapIntensity: 1.3 });
+    const top = new THREE.MeshStandardMaterial({ color: "#702c40", roughness: 0.5 });
     // Satin brass for the selected tool: lit by direct light, not only reflections.
     const lit = new THREE.MeshStandardMaterial({ color: "#c9a271", metalness: 0.45, roughness: 0.35, emissive: new THREE.Color("#5a3d1d"), emissiveIntensity: 0.35 });
     const all = [stone, stoneDark, lacquer, brass, top, lit];
@@ -113,7 +113,7 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
         </mesh>
       </group>
       <Html position={[0, 1.75, 0]} center className="pointer-events-none select-none">
-        <span className="whitespace-nowrap text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#782D40]">ReAct agent · LangGraph</span>
+        <span className="whitespace-nowrap text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#702c40]">ReAct agent · LangGraph</span>
       </Html>
 
       {/* Five tools */}
@@ -140,7 +140,7 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
                 onBlur={() => onSelect(null)}
                 onClick={() => onSelect(i)}
                 className={`whitespace-nowrap border px-2.5 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.14em] transition-colors ${
-                  selected === i ? "border-[#782D40] bg-[#782D40] text-[#F6F0E7]" : "border-[#d9cfc3] bg-[#F6F0E7]/90 text-[#542031]"
+                  selected === i ? "border-[#702c40] bg-[#702c40] text-[#f5efe6]" : "border-[#d9cfc3] bg-[#f5efe6]/90 text-[#542031]"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")} {tool.name}
@@ -179,7 +179,7 @@ export default function AgentEngineScene({ active, ...props }: Props) {
       <directionalLight position={[-4, 7, 4]} intensity={1.8} color="#fff1e4" />
       <Environment resolution={64} frames={1}>
         <Lightformer form="rect" intensity={2} position={[0, 6, 2]} rotation-x={Math.PI / 2} scale={[10, 4, 1]} color="#fff6ec" />
-        <Lightformer form="rect" intensity={1} position={[-6, 2, 3]} rotation-y={Math.PI / 2} scale={[4, 6, 1]} color="#f6f0e7" />
+        <Lightformer form="rect" intensity={1} position={[-6, 2, 3]} rotation-y={Math.PI / 2} scale={[4, 6, 1]} color="#f5efe6" />
         <Lightformer form="rect" intensity={0.8} position={[6, 1, -2]} rotation-y={-Math.PI / 2} scale={[4, 6, 1]} color="#ede3d8" />
       </Environment>
       <Engine {...props} />

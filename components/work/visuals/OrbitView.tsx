@@ -15,7 +15,7 @@ const BANDS: { id: Band; label: string }[] = [
 // Per-band appearance of the same schematic ground: fields, river, settlement, forest.
 const PALETTE: Record<Band, { field: string[]; water: string; town: string; forest: string; bg: string }> = {
   rgb: { field: ["#d8c8a6", "#cbbb94", "#bfae86", "#d2c49d"], water: "#7f8f8c", town: "#a8968c", forest: "#7d7a58", bg: "#cdbd98" },
-  nir: { field: ["#f0e2dd", "#e7d5d2", "#dcc3bf", "#efdcd6"], water: "#2f2427", town: "#9a8584", forest: "#f6ece8", bg: "#e2cdc8" },
+  nir: { field: ["#f0e2dd", "#e8d8d2", "#dcc3bf", "#efdcd6"], water: "#2f2427", town: "#9a8584", forest: "#f6ece8", bg: "#e2cdc8" },
   swir: { field: ["#a76a74", "#94545f", "#b98088", "#8a4a56"], water: "#3a1c25", town: "#d2b6a8", forest: "#6d2d3d", bg: "#9b5d68" },
   sar: { field: ["#9d9692", "#8a837f", "#b0a9a4", "#958e89"], water: "#2a2626", town: "#e7e2dc", forest: "#79726e", bg: "#8f8884" },
 };
@@ -81,7 +81,7 @@ export function OrbitView({ progress }: { progress: MotionValue<number>; active:
               style={{ transform: `translateZ(${(i - 3) * 70 * (1 - fuse)}px)`, opacity: b.id === "rgb" ? 1 : 1 - fuse * 0.999 }}
             >
               <Terrain band={b.id} />
-              <span className="absolute left-2 top-2 bg-[#F6F0E7]/90 px-1.5 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#542031]" style={{ opacity: 1 - fuse }}>
+              <span className="absolute left-2 top-2 bg-[#f5efe6]/90 px-1.5 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#542031]" style={{ opacity: 1 - fuse }}>
                 {b.label}
               </span>
             </div>
@@ -91,15 +91,15 @@ export function OrbitView({ progress }: { progress: MotionValue<number>; active:
             initial={false}
             animate={{ opacity: grounded ? 1 : 0, scale: grounded ? 1 : 1.15 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute border-2 border-[#782D40]"
+            className="absolute border-2 border-[#702c40]"
             style={{ left: "37%", top: "50%", width: "38%", height: "32%", boxShadow: "0 0 0 9999px rgba(84,32,49,0.28)" }}
           >
-            <span className="absolute -top-6 left-0 whitespace-nowrap bg-[#782D40] px-1.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[#F6F0E7]">
+            <span className="absolute -top-6 left-0 whitespace-nowrap bg-[#702c40] px-1.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[#f5efe6]">
               Grounded · water
             </span>
           </motion.div>
           {/* north arrow + scale bar, as on a survey plate */}
-          <div className="absolute bottom-2 right-2 flex items-end gap-3 bg-[#F6F0E7]/85 px-2 py-1 text-[0.66rem] font-semibold text-[#542031]">
+          <div className="absolute bottom-2 right-2 flex items-end gap-3 bg-[#f5efe6]/85 px-2 py-1 text-[0.66rem] font-semibold text-[#542031]">
             <span>N ↑</span>
             <span className="flex flex-col items-start">
               <span className="block h-1 w-12 border-x border-b border-[#542031]" />
@@ -112,14 +112,14 @@ export function OrbitView({ progress }: { progress: MotionValue<number>; active:
       {/* Query console */}
       <div className="grid gap-1.5 border-t border-[#d6c8b9] pt-3 font-mono text-[0.76rem] text-[#542031]">
         <p className="min-h-[1.2em]">
-          <span className="text-[#782D40]">query ›</span> {Q1.slice(0, typed1)}
+          <span className="text-[#702c40]">query ›</span> {Q1.slice(0, typed1)}
           {typed1 > 0 && typed1 < Q1.length && <span className="animate-pulse">▍</span>}
         </p>
         <p className="min-h-[1.2em]">
-          <span className="text-[#782D40]">query ›</span> {Q2.slice(0, typed2)}
+          <span className="text-[#702c40]">query ›</span> {Q2.slice(0, typed2)}
         </p>
         <p className={`min-h-[2.4em] font-serif text-[0.95rem] text-[#625A56] transition-opacity duration-500 ${captioned ? "opacity-100" : "opacity-0"}`}>
-          <span className="font-mono text-[0.76rem] text-[#782D40]">caption ›</span> {CAPTION}
+          <span className="font-mono text-[0.76rem] text-[#702c40]">caption ›</span> {CAPTION}
         </p>
         <p className="font-sans text-[0.66rem] text-[#8a7f78]">Schematic scene and illustrative queries — shows the kind of task SatQuery handles, not live model output.</p>
       </div>

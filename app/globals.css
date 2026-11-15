@@ -1,44 +1,44 @@
 @import "tailwindcss";
 
-/* ───────────────────────── PRASANNA — BURGUNDY EDITORIAL ─────────────────────────
+/* ───────────────────────── PRASANNA — BURGUNDY ATELIER ─────────────────────────
    Warm ivory paper dominates; burgundy is the signature; dusty rose for selected
    rooms; antique gold only as micro-accent; warm espresso for reading text.
    Token names are stable; each "room" class remaps their values.                  */
 
 @theme {
   /* Ground — warm ivory paper (base room) */
-  --color-void: #f5f0e8;
+  --color-void: #f5efe6;
   --color-obsidian: #eee8dd;
   --color-onyx: #e7dfd2;
-  --color-graphite: #f5f0e8;
+  --color-graphite: #f5efe6;
   --color-gunmetal: #ddd3c4;
 
   /* Ink — 50 is the signature (burgundy), 100–200 espresso reading text */
-  --color-titanium-50: #702d40;
-  --color-titanium-100: #45403d;
-  --color-titanium-200: #45403d;
+  --color-titanium-50: #702c40;
+  --color-titanium-100: #4c4140;
+  --color-titanium-200: #4c4140;
   --color-titanium-300: #5a534f;
   --color-titanium-400: #736a66;
   --color-titanium-500: #8c7f80;
   --color-titanium-600: #b3a7a6;
 
   /* Signal */
-  --color-volt: #702d40;
-  --color-volt-bright: #702d40;
-  --color-volt-glow: #b99265;
+  --color-volt: #702c40;
+  --color-volt-bright: #702c40;
+  --color-volt-glow: #c6a77b;
   --color-volt-deep: #561f30;
 
   /* Fixed palette (never remapped) */
-  --color-ivory: #f5f0e8;
-  --color-burgundy: #702d40;
-  --color-rose: #e7d5d2;
-  --color-rose-deep: #b78385;
-  --color-gold: #b99265;
-  --color-espresso: #45403d;
+  --color-ivory: #f5efe6;
+  --color-burgundy: #702c40;
+  --color-rose: #e8d8d2;
+  --color-rose-deep: #a75b68;
+  --color-gold: #c6a77b;
+  --color-espresso: #4c4140;
   --color-line: #d9cfc3;
-  --color-ink: #702d40;
+  --color-ink: #702c40;
   --color-silver: #8c7f80;
-  --color-terracotta: #702d40;
+  --color-terracotta: #702c40;
 
   /* Lines */
   --color-hairline: #d9cfc3;
@@ -47,6 +47,7 @@
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-editorial: var(--font-bodoni), "Didot", ui-serif, Georgia, serif;
   --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-signature: var(--font-mrs-saint), "Brush Script MT", cursive;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
 
@@ -64,7 +65,7 @@
 
 /* Dusty-rose room. */
 .theme-rose {
-  --color-void: #e7d5d2;
+  --color-void: #e8d8d2;
   --color-obsidian: #e0cbc7;
   --color-onyx: #d8c0bc;
   --color-titanium-500: #806c6d;
@@ -77,20 +78,20 @@
 
 /* Burgundy room — the one full-colour space. */
 .theme-burgundy {
-  --color-void: #702d40;
+  --color-void: #702c40;
   --color-obsidian: #7a3443;
   --color-onyx: #843c4c;
-  --color-titanium-50: #f3efe6;
+  --color-titanium-50: #f5efe6;
   --color-titanium-100: #f0e7de;
-  --color-titanium-200: #e7d5d2;
+  --color-titanium-200: #e8d8d2;
   --color-titanium-300: #dcc3bf;
   --color-titanium-400: #cba9a5;
   --color-titanium-500: #b48c89;
   --color-titanium-600: #9a6f6e;
-  --color-volt: #b58b60;
+  --color-volt: #c6a77b;
   --color-volt-bright: #c9a079;
-  --color-volt-deep: #b58b60;
-  --color-terracotta: #b58b60;
+  --color-volt-deep: #c6a77b;
+  --color-terracotta: #c6a77b;
   --color-hairline: rgb(243 239 230 / 0.16);
   --color-hairline-strong: rgb(243 239 230 / 0.3);
   background-color: var(--color-void);

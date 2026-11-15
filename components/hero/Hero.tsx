@@ -13,8 +13,8 @@ import { useStage } from "@/components/stage/SculptureStage";
  * Editorial cover. Left: identity, introduction and a layered headline.
  * Right: the studio photograph on three depth planes (rose ground, photo,
  * gold hairline frame) that move at different rates; scrolling locks the
- * frame onto the photograph. The IDEA → INTELLIGENCE sculpture sits in the
- * gutter between headline and photograph.
+ * frame onto the photograph, and the whole object tilts toward the pointer.
+ * The Intelligence Prism sits in the gutter between headline and photograph.
  */
 export function Hero() {
   const section = useRef<HTMLElement>(null);
@@ -33,6 +33,9 @@ export function Hero() {
   const frameX = useTransform(sx, (v) => v * 10);
   const frameY = useTransform(sy, (v) => v * 8);
   const typeX = useTransform(sx, (v) => v * 6);
+  // the whole photographic object tilts a few degrees toward the pointer
+  const tiltX = useTransform(sy, (v) => v * -4);
+  const tiltY = useTransform(sx, (v) => v * 5);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -64,11 +67,14 @@ export function Hero() {
           .from("[data-frame]", { opacity: 0, scale: 1.06, duration: 1.4, ease: "expo.out" }, 1.75)
           .from("[data-mark]", { opacity: 0, duration: 0.6, stagger: 0.05 }, 2.1)
           // typography: the serif rises, the rule draws, the sans slides under it
+          .from("[data-lead]", { yPercent: 105, duration: 1, ease: "expo.out" }, 1.35)
           .from("[data-ideas]", { yPercent: 100, duration: 1.4, ease: "expo.out" }, 1.45)
           .from("[data-rule]", { scaleX: 0, transformOrigin: "left", duration: 0.9, ease: "expo.inOut" }, 1.85)
           .from("[data-into]", { opacity: 0, x: -10, duration: 0.7 }, 2.05)
           .from("[data-intel]", { yPercent: 100, duration: 1.3, ease: "expo.out" }, 1.95)
-          .from("[data-fade]", { y: 14, opacity: 0, duration: 0.9, stagger: 0.06, ease: "power3.out" }, 2.1);
+          .from("[data-fade]", { y: 14, opacity: 0, duration: 0.9, stagger: 0.06, ease: "power3.out" }, 2.1)
+          // the signature is written left to right
+          .fromTo("[data-sign]", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "power2.inOut" }, 2.6);
         if (driver) tl.to(driver, { intro: 1, duration: 2.6, ease: "power3.out" }, 1.6);
       }
 
@@ -111,7 +117,7 @@ export function Hero() {
           <div className="mt-8 max-w-[29rem]">
             <p data-fade className="text-[1.02rem] font-semibold leading-snug text-espresso">{hero.tagline}</p>
             <p data-fade className="mt-3 font-serif text-[1.22rem] leading-[1.4] text-titanium-300">
-              I build intelligent systems that connect artificial intelligence with real-world problems.
+              {hero.intro}
             </p>
           </div>
 
@@ -127,15 +133,17 @@ export function Hero() {
           {/* Layered headline */}
           <motion.h1 style={{ x: typeX }} className="relative mt-14 text-burgundy lg:mt-auto">
             <span className="sr-only">
-              {profile.name}, {hero.role}. Ideas into intelligence.
+              {profile.name}, {hero.role}. {hero.headline}
             </span>
-            <span aria-hidden data-fade className="absolute -top-6 left-1 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-titanium-400">
-              (n.) — Fig. 01
+            <span aria-hidden className="block overflow-hidden">
+              <span data-lead className="block font-display text-[clamp(1.25rem,2vw,1.9rem)] font-medium leading-none tracking-[-0.02em] text-espresso">
+                I turn ambitious
+              </span>
             </span>
-            <span aria-hidden className="flex items-end gap-5">
+            <span aria-hidden className="mt-1 flex items-end gap-5">
               <span className="block overflow-hidden pb-[0.06em]">
                 <span data-ideas className="block font-editorial leading-[0.82] tracking-[-0.025em]" style={{ fontSize: "clamp(4.6rem, 11.6vw, 12.8rem)" }}>
-                  Ideas
+                  ideas
                 </span>
               </span>
               <span className="mb-[1.6vw] flex items-center gap-3">
@@ -143,20 +151,17 @@ export function Hero() {
                 <span data-into className="text-[clamp(0.75rem,1vw,0.95rem)] font-medium uppercase tracking-[0.42em] text-espresso">into</span>
               </span>
             </span>
-            <span aria-hidden className="-mt-[0.32em] block overflow-hidden pl-[0.85em]" style={{ fontSize: "clamp(2.7rem, 6vw, 6.6rem)" }}>
-              <span data-intel className="block font-display font-extrabold leading-[0.95] tracking-[-0.05em] text-espresso">
-                Intelligence<span className="text-gold">.</span>
+            <span aria-hidden className="-mt-[0.28em] block overflow-hidden pb-[0.08em] pl-[0.6em]" style={{ fontSize: "clamp(2.2rem, 4.3vw, 4.9rem)" }}>
+              <span data-intel className="block font-display font-extrabold leading-[0.98] tracking-[-0.05em] text-espresso">
+                intelligent systems<span className="text-gold">.</span>
               </span>
-            </span>
-            <span aria-hidden data-fade className="mt-3 block pl-[0.15em] font-serif text-[0.95rem] text-titanium-400">
-              ↳ the work of turning an idea into a system that thinks.
             </span>
           </motion.h1>
         </div>
 
         {/* ───── Right column: the photograph on three planes ───── */}
         <div className="relative mt-16 flex items-start justify-end lg:col-span-5 lg:mt-0 lg:items-center">
-          <figure className="relative w-[min(400px,82vw)]">
+          <motion.figure style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1100 }} className="relative w-[min(400px,82vw)]">
             {/* plane 1 — dusty-rose ground */}
             <motion.div style={{ x: groundX, y: groundY }} className="absolute inset-0" aria-hidden>
               <div data-ground-lock className="absolute inset-0">
@@ -198,9 +203,14 @@ export function Hero() {
               <span key={c} data-mark aria-hidden className={`absolute size-3 border-espresso/50 ${c}`} />
             ))}
 
-            <figcaption data-fade className="mt-7 flex items-baseline justify-between gap-4 text-[0.75rem] text-titanium-400">
-              <span className="text-espresso">Fig. 1 — In the studio</span>
-              <span>Bengaluru</span>
+            <figcaption className="mt-6 flex items-end justify-between gap-4 text-[0.75rem] text-espresso">
+              <span data-fade>
+                Fig. 1 — In the studio, Bengaluru
+              </span>
+              {/* signature, written on after the intro */}
+              <span aria-hidden data-sign className="-mb-2 -rotate-6 font-signature text-[clamp(2.8rem,4.4vw,3.8rem)] leading-none text-burgundy">
+                Prasanna
+              </span>
             </figcaption>
 
             <span
@@ -210,14 +220,14 @@ export function Hero() {
             >
               Prasanna Raj R. — Portrait
             </span>
-          </figure>
+          </motion.figure>
         </div>
 
         {/* Click target over the sculpture (gutter between headline and photo) */}
         <button
           type="button"
           onClick={() => stage?.scatter()}
-          aria-label="Take the sculpture apart and watch it reassemble"
+          aria-label="Replay the prism: watch the idea refract again"
           className="group absolute bottom-[8%] left-[57%] z-10 hidden h-[26%] w-[8%] items-end justify-center xl:flex"
         >
           <span data-fade className="translate-y-5 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-titanium-500 transition-colors group-hover:text-burgundy">

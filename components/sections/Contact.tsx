@@ -137,9 +137,14 @@ export function Contact() {
         </div>
 
         <div data-contact-fade className="mt-16 grid gap-10 md:grid-cols-12">
-          <p className="font-serif text-[1.3rem] leading-snug text-titanium-200 md:col-span-4">
-            Write to me directly — the form opens your own mail app with the message ready.
-          </p>
+          <div className="md:col-span-4">
+            <p className="font-serif text-[1.3rem] leading-snug text-titanium-200">
+              Write to me directly — the form opens your own mail app with the message ready.
+            </p>
+            <p aria-hidden className="mt-8 -rotate-3 font-signature text-[clamp(3rem,5vw,4.2rem)] leading-none text-gold">
+              Prasanna
+            </p>
+          </div>
           <div className="md:col-span-7 md:col-start-6">
             <ContactForm />
           </div>

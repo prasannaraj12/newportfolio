@@ -7,8 +7,8 @@ import { useStage } from "@/components/stage/SculptureStage";
 
 /**
  * 01 — Ideas into intelligence.
- * The sculpture arrives from the hero; scrolling locks its plates from a
- * loose spiral into a monolith while the sentence assembles around it.
+ * The prism arrives from the hero; scrolling refracts the idea into five
+ * rays that are tied into one structure while the sentence assembles.
  */
 export function Ideas() {
   const root = useRef<HTMLElement>(null);
@@ -92,7 +92,7 @@ export function Ideas() {
             type="button"
             onClick={() => stage?.scatter()}
             className="absolute left-1/2 top-[50%] h-[36%] w-[26%] -translate-x-1/2 -translate-y-1/2"
-            aria-label="Scatter the sculpture and watch it reassemble"
+            aria-label="Replay the prism: watch the idea refract again"
           />
         </div>
       </div>

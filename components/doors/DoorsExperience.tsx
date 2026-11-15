@@ -209,6 +209,7 @@ function Cinematic() {
               </h4>
               <p>{d.period}</p>
               <p>{d.summary}</p>
+              {d.tech && <p>Technologies: {d.tech.join(", ")}</p>}
               {d.panels.map((p) => (
                 <div key={p.id}>
                   <p>
@@ -256,6 +257,12 @@ function Cinematic() {
             <p className="mt-3 font-display text-xl font-bold leading-tight tracking-[-0.02em] text-burgundy">{d.company}</p>
             <p className="mt-1 text-[0.92rem] text-espresso">{d.role}</p>
             <p className="mt-1 text-[0.78rem] text-titanium-400">{d.period}</p>
+            {d.tech && (
+              <p className="mt-3 border-t border-hairline pt-3 text-[0.76rem] leading-relaxed text-espresso">
+                <span className="mr-2 font-medium uppercase tracking-[0.12em] text-gold">Tools</span>
+                {d.tech.join(" · ")}
+              </p>
+            )}
           </div>
         ))}
 

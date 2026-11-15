@@ -55,7 +55,7 @@ export function TrustLayers({ progress }: { progress: MotionValue<number>; activ
                     transform: `translateZ(${shown ? z : -60}px)`,
                     opacity: shown ? 1 : 0,
                     transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-                    background: focus === i ? "rgba(120,45,64,0.9)" : i === 0 ? "rgba(237,227,216,0.95)" : `rgba(120,45,64,${0.08 + i * 0.07})`,
+                    background: focus === i ? "rgba(112,44,64,0.9)" : i === 0 ? "rgba(237,227,216,0.95)" : `rgba(112,44,64,${0.08 + i * 0.07})`,
                     border: `1px solid ${focus === i ? "#542031" : "#cbbcad"}`,
                     boxShadow: "0 30px 50px -30px rgba(84,32,49,0.45)",
                   }}
@@ -63,11 +63,11 @@ export function TrustLayers({ progress }: { progress: MotionValue<number>; activ
                   {l.id === "apps" && (
                     <div className="absolute inset-[12%] grid grid-cols-3 gap-[6%]">
                       {[0, 1, 2].map((k) => (
-                        <div key={k} className={`border ${focus === i ? "border-[#F6F0E7]/50" : "border-[#782D40]/30"}`} />
+                        <div key={k} className={`border ${focus === i ? "border-[#f5efe6]/50" : "border-[#702c40]/30"}`} />
                       ))}
                     </div>
                   )}
-                  {l.id !== "apps" && <div className={`absolute inset-[14%] border border-dashed ${focus === i ? "border-[#F6F0E7]/40" : "border-[#782D40]/25"}`} />}
+                  {l.id !== "apps" && <div className={`absolute inset-[14%] border border-dashed ${focus === i ? "border-[#f5efe6]/40" : "border-[#702c40]/25"}`} />}
                 </div>
               );
             })}
@@ -84,9 +84,9 @@ export function TrustLayers({ progress }: { progress: MotionValue<number>; activ
                 onMouseLeave={() => setHover(null)}
                 onFocus={() => setHover(i)}
                 onBlur={() => setHover(null)}
-                className={`w-full border-l-2 pl-3 text-left transition-colors ${focus === i ? "border-[#782D40]" : "border-[#d9cfc3]"}`}
+                className={`w-full border-l-2 pl-3 text-left transition-colors ${focus === i ? "border-[#702c40]" : "border-[#d9cfc3]"}`}
               >
-                <span className={`block text-[0.62rem] font-semibold uppercase tracking-[0.18em] ${focus === i ? "text-[#782D40]" : "text-[#8a7f78]"}`}>
+                <span className={`block text-[0.62rem] font-semibold uppercase tracking-[0.18em] ${focus === i ? "text-[#702c40]" : "text-[#8a7f78]"}`}>
                   {String(i + 1).padStart(2, "0")} {l.name}
                 </span>
                 <span className="block font-editorial text-[1.15rem] leading-tight text-[#542031]">{l.tech}</span>
@@ -109,7 +109,7 @@ export function TrustLayers({ progress }: { progress: MotionValue<number>; activ
           >
             {LAYERS[focus].roles.map((r) => (
               <li key={r.who}>
-                <span className="block text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-[#782D40]">{r.who}</span>
+                <span className="block text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-[#702c40]">{r.who}</span>
                 {r.does}
               </li>
             ))}
@@ -121,8 +121,8 @@ export function TrustLayers({ progress }: { progress: MotionValue<number>; activ
       <ol className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.72rem]">
         {FLOW.map((s, i) => (
           <li key={s} className="flex items-center gap-2">
-            <span className={`px-2 py-1 transition-colors duration-500 ${i < flowOn ? "bg-[#782D40] text-[#F6F0E7]" : "border border-[#d9cfc3] text-[#8a7f78]"}`}>{s}</span>
-            {i < FLOW.length - 1 && <span className={i < flowOn - 1 ? "text-[#782D40]" : "text-[#cbbcad]"}>→</span>}
+            <span className={`px-2 py-1 transition-colors duration-500 ${i < flowOn ? "bg-[#702c40] text-[#f5efe6]" : "border border-[#d9cfc3] text-[#8a7f78]"}`}>{s}</span>
+            {i < FLOW.length - 1 && <span className={i < flowOn - 1 ? "text-[#702c40]" : "text-[#cbbcad]"}>→</span>}
           </li>
         ))}
       </ol>

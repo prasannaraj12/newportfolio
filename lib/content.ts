@@ -167,7 +167,7 @@ export const achievements = {
     { name: "Smart India Hackathon", year: "2024", tag: "National Finalist" },
     { name: "Advaya 2K25", year: "2025", tag: "National Finalist" },
     { name: "Vihansa", year: "2025", tag: "National Finalist" },
-    { name: "iTech AI Innovation Hackathon", year: "2026", tag: "AI Innovation" },
+    { name: "iTech AI Innovation Hackathon", year: "2026", tag: "Hackathon" },
   ],
   certifications: [
     { name: "Data Visualization: Empowering Business with Effective Insights", issuer: "Tata Group / Forage", year: "2025" },
@@ -188,6 +188,9 @@ export const hero = {
   role: "AI Engineer",
   disciplines: "AI Engineer · Generative AI · Intelligent Systems",
   tagline: "Building Intelligent, Real-World AI Solutions.",
+  headline: "I turn ambitious ideas into intelligent systems.",
+  intro:
+    "I specialise in generative AI, LLM applications and agentic systems — multi-agent pipelines, retrieval workflows and fine-tuned open-weight models.",
 } as const;
 
 export const resumeUrl = "/Prasanna-Raj-R-Resume.pdf";
@@ -400,6 +403,8 @@ export type ExperienceDoor = {
   period: string;
   environment: string;
   summary: string;
+  /** Tools named on the résumé for this role (omitted when none are). */
+  tech?: string[];
   panels: DoorPanel[];
 };
 
@@ -414,6 +419,7 @@ export const doors: ExperienceDoor[] = [
     environment: "The Intelligence Studio",
     summary:
       "Engineering CrawlNews and RentYourMate end-to-end — AI pipeline design, LLM fine-tuning, and full-stack development.",
+    tech: ["LLMs", "Multi-agent pipelines", "Flutter", "Node.js", "Express", "PostgreSQL", "Firebase"],
     panels: [
       {
         id: "crawlnews",
@@ -468,6 +474,7 @@ export const doors: ExperienceDoor[] = [
     environment: "The Data Laboratory",
     summary:
       "Built data-cleaning and visualization pipelines (Python, Pandas, Matplotlib), cutting preprocessing time 40% for recurring reporting cycles.",
+    tech: ["Python", "Pandas", "Matplotlib"],
     panels: [
       {
         id: "data",

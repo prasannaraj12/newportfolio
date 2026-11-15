@@ -20,7 +20,7 @@ type Props = {
 };
 
 const toneClass: Record<Tone, string> = {
-  ivory: "bg-[#F6F0E7]",
+  ivory: "bg-[#f5efe6]",
   cream: "bg-[#EDE3D8]",
   wine: "theme-burgundy bg-[#542031]",
 };
@@ -111,7 +111,7 @@ export function ExhibitRoom({ project: p, layout, tone, visual, caption }: Props
           {p.name}
         </span>
       </h3>
-      <p data-r-meta className={`mt-2 text-[0.95rem] font-semibold ${wine ? "text-gold" : "text-[#45403D]"}`}>{p.tagline}</p>
+      <p data-r-meta className={`mt-2 text-[0.95rem] font-semibold ${wine ? "text-gold" : "text-[#4c4140]"}`}>{p.tagline}</p>
     </>
   );
 

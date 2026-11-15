@@ -19,7 +19,7 @@ const byId = Object.fromEntries(work.map((p) => [p.id, p])) as Record<(typeof wo
  */
 export function Work() {
   return (
-    <section id="laboratory" aria-label="Selected work" className="relative bg-[#F6F0E7]">
+    <section id="laboratory" aria-label="Selected work" className="relative bg-[#f5efe6]">
       <Opening />
 
       <ExhibitRoom project={byId.agentdb} layout="visual-right" tone="ivory" visual={(p, a) => <AgentEngine progress={p} active={a} />} />

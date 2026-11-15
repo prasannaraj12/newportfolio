@@ -3,9 +3,9 @@
 import dynamic from "next/dynamic";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
-import type { Anchor, SculptureDriver } from "./IdeaSculpture";
+import type { Anchor, SculptureDriver } from "./IntelligencePrism";
 
-const IdeaSculpture = dynamic(() => import("./IdeaSculpture"), { ssr: false });
+const IntelligencePrism = dynamic(() => import("./IntelligencePrism"), { ssr: false });
 
 type StageApi = { driver: SculptureDriver; scatter: () => void };
 const StageContext = createContext<StageApi | null>(null);
@@ -22,7 +22,7 @@ const ANCHORS: Record<"desktop" | "tablet" | "compact", { from: Anchor; to: Anch
 
 /**
  * A sticky WebGL layer shared by the hero and the Ideas chapter, so the
- * sculpture can physically travel between them.
+ * Intelligence Prism can physically travel between them.
  */
 export function SculptureStage({ children }: { children: React.ReactNode }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -65,7 +65,7 @@ export function SculptureStage({ children }: { children: React.ReactNode }) {
         {/* Overlay spans exactly the hero + Ideas; the sticky child cannot overflow it. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 z-[5]">
           <div className="sticky top-0 h-[100svh] w-full">
-            <IdeaSculpture driver={driver} from={a.from} to={a.to} levels={compact ? 3 : 4} active={active} />
+            <IntelligencePrism driver={driver} from={a.from} to={a.to} active={active} />
           </div>
         </div>
         {children}

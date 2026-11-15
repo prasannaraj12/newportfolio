@@ -57,7 +57,7 @@ export function AgentEngine({ progress, active }: { progress: MotionValue<number
               <span className="text-[#8a7f78]">thought ›</span> choose the next tool
             </p>
             <p className="text-[#542031]">
-              <span className="text-[#782D40]">action ›</span> {tool.name}
+              <span className="text-[#702c40]">action ›</span> {tool.name}
             </p>
             <p>
               <span className="text-[#8a7f78]">observe ›</span> {tool.does}

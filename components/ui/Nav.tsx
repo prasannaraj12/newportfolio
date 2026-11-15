@@ -32,10 +32,16 @@ export function Nav() {
   useEffect(() => {
     const els = nav.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
     const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (e.isIntersecting) setCurrent(e.target.id);
-        }),
+      () => {
+        // Whichever section holds the middle of the viewport is current —
+        // robust to jumps that skip past several sections at once.
+        const mid = window.innerHeight * 0.5;
+        const hit = els.find((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top <= mid && r.bottom > mid;
+        });
+        if (hit) setCurrent(hit.id);
+      },
       { rootMargin: "-45% 0px -50% 0px" },
     );
     els.forEach((el) => io.observe(el));

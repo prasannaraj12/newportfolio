@@ -83,27 +83,27 @@ export function EvidenceVault({ progress }: { progress: MotionValue<number>; act
                 animate={{ opacity: entered(i) ? 1 : 0, z: entered(i) ? 0 : -220, y: bad ? 8 : 0, rotateZ: bad ? (i % 2 ? 1.5 : -1.5) : 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className={`relative border p-4 transition-colors duration-500 ${
-                  bad ? "border-[#B78385] bg-[#B78385]/20" : ok ? "border-[#B99265] bg-[#F6F0E7]/[0.07]" : "border-[#F6F0E7]/15 bg-[#F6F0E7]/[0.04]"
+                  bad ? "border-[#a75b68] bg-[#a75b68]/20" : ok ? "border-[#c6a77b] bg-[#f5efe6]/[0.07]" : "border-[#f5efe6]/15 bg-[#f5efe6]/[0.04]"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-[#B99265]">Record {i + 1}</span>
-                  {ok && <Check className="size-3.5 text-[#B99265]" />}
+                  <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-[#c6a77b]">Record {i + 1}</span>
+                  {ok && <Check className="size-3.5 text-[#c6a77b]" />}
                   {bad && <X className="size-3.5 text-[#e2b7b8]" />}
                 </div>
-                <p className="mt-1.5 text-[0.86rem] leading-tight text-[#F6F0E7]">{r?.payload ?? name}</p>
-                <dl className="mt-3 space-y-0.5 font-mono text-[0.6rem] text-[#e7d5d2]/70">
+                <p className="mt-1.5 text-[0.86rem] leading-tight text-[#f5efe6]">{r?.payload ?? name}</p>
+                <dl className="mt-3 space-y-0.5 font-mono text-[0.6rem] text-[#e8d8d2]/70">
                   <div className="flex justify-between gap-2">
                     <dt>prev</dt>
                     <dd>{short(r?.prev ?? "")}</dd>
                   </div>
                   <div className="flex justify-between gap-2">
                     <dt>hash</dt>
-                    <dd className={bad ? "text-[#e2b7b8]" : "text-[#F6F0E7]"}>{short(r?.hash ?? "")}</dd>
+                    <dd className={bad ? "text-[#e2b7b8]" : "text-[#f5efe6]"}>{short(r?.hash ?? "")}</dd>
                   </div>
                 </dl>
                 {allChecked && tampered === null && (
-                  <button type="button" onClick={() => tamper(i)} className="mt-2 text-[0.66rem] text-[#e7d5d2]/70 underline underline-offset-4 hover:text-[#F6F0E7]">
+                  <button type="button" onClick={() => tamper(i)} className="mt-2 text-[0.66rem] text-[#e8d8d2]/70 underline underline-offset-4 hover:text-[#f5efe6]">
                     Tamper
                   </button>
                 )}
@@ -112,14 +112,14 @@ export function EvidenceVault({ progress }: { progress: MotionValue<number>; act
                   <span
                     aria-hidden
                     className="absolute left-full top-1/2 h-px w-6 origin-left transition-transform duration-700"
-                    style={{ transform: `scaleX(${linked(i) ? 1 : 0})`, background: recs && broken(recs[i + 1]) && allChecked ? "#B78385" : "#B99265" }}
+                    style={{ transform: `scaleX(${linked(i) ? 1 : 0})`, background: recs && broken(recs[i + 1]) && allChecked ? "#a75b68" : "#c6a77b" }}
                   />
                 )}
                 {i === 2 && (
                   <span
                     aria-hidden
                     className="absolute -bottom-10 left-1/2 h-10 w-px origin-top transition-transform duration-700"
-                    style={{ transform: `scaleY(${linked(i) ? 1 : 0})`, background: recs && broken(recs[3]) && allChecked ? "#B78385" : "#B99265" }}
+                    style={{ transform: `scaleY(${linked(i) ? 1 : 0})`, background: recs && broken(recs[3]) && allChecked ? "#a75b68" : "#c6a77b" }}
                   />
                 )}
               </motion.div>
@@ -127,12 +127,12 @@ export function EvidenceVault({ progress }: { progress: MotionValue<number>; act
           })}
         </div>
         {/* verification sweep */}
-        <div aria-hidden className="mt-8 h-px w-full bg-[#F6F0E7]/10">
-          <div className="h-full origin-left bg-[#B99265]" style={{ transform: `scaleX(${sweep})` }} />
+        <div aria-hidden className="mt-8 h-px w-full bg-[#f5efe6]/10">
+          <div className="h-full origin-left bg-[#c6a77b]" style={{ transform: `scaleX(${sweep})` }} />
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#F6F0E7]/15 pt-3 text-[0.78rem] text-[#e7d5d2]">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#f5efe6]/15 pt-3 text-[0.78rem] text-[#e8d8d2]">
         <span>
           {!allChecked
             ? "Verifying the chain of custody…"
@@ -141,12 +141,12 @@ export function EvidenceVault({ progress }: { progress: MotionValue<number>; act
               : `Record ${(tampered ?? 0) + 1} was edited — its hash no longer matches the seal, and every record after it breaks.`}
         </span>
         {tampered !== null && (
-          <button type="button" onClick={reset} className="inline-flex items-center gap-1.5 text-[#F6F0E7] hover:text-[#B99265]">
+          <button type="button" onClick={reset} className="inline-flex items-center gap-1.5 text-[#f5efe6] hover:text-[#c6a77b]">
             <RotateCcw className="size-3.5" /> Re-seal
           </button>
         )}
       </div>
-      <p className="mt-1.5 text-[0.66rem] text-[#e7d5d2]/55">
+      <p className="mt-1.5 text-[0.66rem] text-[#e8d8d2]/55">
         Illustration of a hash-chained evidence log — SHA-256 computed live in your browser, no network calls. Not output from TRUST-CV itself.
       </p>
     </div>

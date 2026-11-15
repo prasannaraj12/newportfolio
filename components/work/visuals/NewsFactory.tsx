@@ -10,10 +10,10 @@ const MOUTH = 0.16;
 const OUT = 0.93;
 const LANES = [0.33, 0.5, 0.67];
 
-const BURGUNDY = "#782D40";
+const BURGUNDY = "#702c40";
 const DEEP = "#542031";
-const ROSE = "#B78385";
-const GOLD = "#B99265";
+const ROSE = "#a75b68";
+const GOLD = "#c6a77b";
 const LINE = "#d6c8b9";
 
 type P = { i: number; phase: number; sy: number; pre: number; lane: number; dup: boolean; drop: boolean; from: "top" | "left" | "bottom" };
@@ -92,7 +92,7 @@ export function NewsFactory({ progress, active }: { progress: MotionValue<number
       // event lanes after clustering
       if (on >= 3) {
         LANES.forEach((l) => {
-          ctx.strokeStyle = "rgba(120,45,64,0.12)";
+          ctx.strokeStyle = "rgba(112,44,64,0.12)";
           ctx.lineWidth = 10;
           ctx.beginPath();
           ctx.moveTo(GATES[2] * W, l * H);
@@ -187,7 +187,7 @@ export function NewsFactory({ progress, active }: { progress: MotionValue<number
             className="absolute top-0 -translate-x-1/2 text-center transition-colors duration-500"
             style={{ left: `${GATES[k] * 100}%` }}
           >
-            <p className={`text-[0.62rem] font-semibold tabular-nums ${k < stagesOn ? "text-[#782D40]" : "text-[#b3a59a]"}`}>{String(k + 1).padStart(2, "0")}</p>
+            <p className={`text-[0.62rem] font-semibold tabular-nums ${k < stagesOn ? "text-[#702c40]" : "text-[#b3a59a]"}`}>{String(k + 1).padStart(2, "0")}</p>
             <p className={`whitespace-nowrap text-[0.64rem] font-semibold uppercase tracking-[0.12em] ${k < stagesOn ? "text-[#542031]" : "text-[#b3a59a]"}`}>
               {s.name}
             </p>
@@ -198,7 +198,7 @@ export function NewsFactory({ progress, active }: { progress: MotionValue<number
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#d6c8b9] pt-3 text-[0.74rem] text-[#625A56]">
         <span>
-          <span className="font-semibold text-[#782D40]">{stagesOn}/6</span> stages running —{" "}
+          <span className="font-semibold text-[#702c40]">{stagesOn}/6</span> stages running —{" "}
           {stagesOn === 0 ? "scroll to switch the line on" : crawlStages[Math.min(5, stagesOn - 1)].does}
         </span>
         <span className="text-[#8a7f78]">Runs on a 15-minute schedule · schematic</span>

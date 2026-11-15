@@ -61,6 +61,12 @@ export function DoorsFallback() {
                 <p className="mt-1 text-espresso">{d.role}</p>
                 <p className="text-[0.8rem] text-titanium-400">{d.period}</p>
                 <p className="mt-4 font-serif text-[1.1rem] leading-snug text-espresso">{d.summary}</p>
+                {d.tech && (
+                  <p className="mt-3 text-[0.8rem] text-espresso">
+                    <span className="mr-2 font-medium uppercase tracking-[0.12em] text-gold">Tools</span>
+                    {d.tech.join(" · ")}
+                  </p>
+                )}
                 <ul className="mt-5 space-y-4 border-t border-hairline pt-5">
                   {d.panels.map((p) => (
                     <li key={p.id}>
