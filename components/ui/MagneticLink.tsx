@@ -13,10 +13,8 @@ type Props = {
 };
 
 const styles = {
-  primary:
-    "bg-titanium-50 text-void hover:bg-white",
-  ghost:
-    "text-titanium-100 border border-hairline-strong hover:border-volt/60 hover:text-white bg-white/[0.02] backdrop-blur-sm",
+  primary: "bg-titanium-50 text-void hover:bg-volt-deep",
+  ghost: "text-titanium-100 border border-hairline-strong hover:border-titanium-50 hover:text-titanium-50",
 };
 
 /** Pill link that leans toward the cursor (Motion springs). */

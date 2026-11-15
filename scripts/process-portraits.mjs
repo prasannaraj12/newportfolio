@@ -19,6 +19,9 @@ const jobs = [
   // Hero placeholder: subject-centred crop of the studio portrait. Shown near
   // native size — replace with the original high-resolution photograph.
   { file: "04-studio-portrait.jpg", out: "hero-portrait", box: { left: 118, top: 20, width: 600, height: 451 } },
+  // Hero (editorial frame): portrait-orientation slice centred on the face,
+  // displayed at native size (400×451) — never upscaled.
+  { file: "04-studio-portrait.jpg", out: "hero-tall", box: { left: 242, top: 20, width: 400, height: 451 } },
   // Contact background: drop the strip along the top and left edges.
   { file: "04-studio-portrait.jpg", out: "studio", box: { left: 22, top: 20, width: 814, height: 451 } },
 ];

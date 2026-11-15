@@ -7,42 +7,45 @@
 
 @theme {
   /* Ground — warm ivory paper (base room) */
-  --color-void: #f3efe6;
-  --color-obsidian: #ece6da;
-  --color-onyx: #e5ddcf;
-  --color-graphite: #f3efe6;
+  --color-void: #f5f0e8;
+  --color-obsidian: #eee8dd;
+  --color-onyx: #e7dfd2;
+  --color-graphite: #f5f0e8;
   --color-gunmetal: #ddd3c4;
 
   /* Ink — 50 is the signature (burgundy), 100–200 espresso reading text */
-  --color-titanium-50: #702c3b;
-  --color-titanium-100: #403638;
-  --color-titanium-200: #403638;
-  --color-titanium-300: #564a4c;
-  --color-titanium-400: #6f6264;
+  --color-titanium-50: #702d40;
+  --color-titanium-100: #45403d;
+  --color-titanium-200: #45403d;
+  --color-titanium-300: #5a534f;
+  --color-titanium-400: #736a66;
   --color-titanium-500: #8c7f80;
   --color-titanium-600: #b3a7a6;
 
   /* Signal */
-  --color-volt: #702c3b;
-  --color-volt-bright: #702c3b;
-  --color-volt-glow: #b58b60;
-  --color-volt-deep: #571f2c;
+  --color-volt: #702d40;
+  --color-volt-bright: #702d40;
+  --color-volt-glow: #b99265;
+  --color-volt-deep: #561f30;
 
   /* Fixed palette (never remapped) */
-  --color-ivory: #f3efe6;
-  --color-burgundy: #702c3b;
+  --color-ivory: #f5f0e8;
+  --color-burgundy: #702d40;
   --color-rose: #e7d5d2;
-  --color-gold: #b58b60;
-  --color-espresso: #403638;
-  --color-ink: #702c3b;
+  --color-rose-deep: #b78385;
+  --color-gold: #b99265;
+  --color-espresso: #45403d;
+  --color-line: #d9cfc3;
+  --color-ink: #702d40;
   --color-silver: #8c7f80;
-  --color-terracotta: #702c3b;
+  --color-terracotta: #702d40;
 
   /* Lines */
-  --color-hairline: rgb(64 54 56 / 0.14);
-  --color-hairline-strong: rgb(64 54 56 / 0.26);
+  --color-hairline: #d9cfc3;
+  --color-hairline-strong: #c4b6a7;
 
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: var(--font-bodoni), "Didot", ui-serif, Georgia, serif;
   --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
@@ -74,7 +77,7 @@
 
 /* Burgundy room — the one full-colour space. */
 .theme-burgundy {
-  --color-void: #702c3b;
+  --color-void: #702d40;
   --color-obsidian: #7a3443;
   --color-onyx: #843c4c;
   --color-titanium-50: #f3efe6;
@@ -217,4 +220,16 @@ body {
 @keyframes nv-cycle {
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
+}
+
+/* Custom cursor (enabled from JS on fine pointers only) */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+.has-cursor input,
+.has-cursor textarea,
+.has-cursor select,
+.has-cursor [contenteditable="true"] {
+  cursor: text !important;
 }

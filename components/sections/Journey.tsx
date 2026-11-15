@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { education, experience, portraits, profile } from "@/lib/content";
+import { education, portraits, profile } from "@/lib/content";
 
 /** 02 — The Journey. Letterboxed portrait, outlined headline, editorial timeline. */
 export function Journey() {
@@ -50,24 +50,6 @@ export function Journey() {
         },
       );
 
-      gsap.fromTo(
-        "[data-spine-fill]",
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: { trigger: "[data-timeline]", start: "top 70%", end: "bottom 60%", scrub: true },
-        },
-      );
-
-      gsap.utils.toArray<HTMLElement>("[data-exp]").forEach((el) => {
-        gsap.from(el, {
-          y: 40,
-          opacity: 0,
-          duration: 1.2,
-          scrollTrigger: { trigger: el, start: "top 86%", once: true },
-        });
-      });
     },
     { scope: root },
   );
@@ -147,44 +129,6 @@ export function Journey() {
           </dl>
         </div>
 
-        {/* Experience */}
-        <div className="mt-28 md:mt-40">
-          <div className="mb-12 flex items-end justify-between gap-6 border-b border-hairline pb-5">
-            <p className="font-serif text-3xl text-titanium-50 md:text-4xl">Internship experience</p>
-            <p className="label hidden md:block">{String(experience.length).padStart(2, "0")} roles</p>
-          </div>
-
-          <ol data-timeline className="relative">
-            <div aria-hidden className="absolute bottom-0 left-[5px] top-2 w-px bg-hairline-strong md:left-[calc(25%+5px)]">
-              <div data-spine-fill className="h-full w-full origin-top bg-titanium-100" />
-            </div>
-
-            {experience.map((e) => (
-              <li key={e.company} data-exp className="relative grid gap-3 pb-16 pl-9 last:pb-0 md:grid-cols-4 md:gap-10 md:pl-0">
-                <p className="font-mono text-xs tracking-wider text-titanium-400 md:pr-10 md:pt-2 md:text-right">
-                  {e.period}
-                </p>
-                <span
-                  aria-hidden
-                  className={`absolute left-0 top-2 size-[11px] rotate-45 border md:left-[25%] ${
-                    e.current ? "border-volt-bright bg-volt-bright" : "border-titanium-400 bg-void"
-                  }`}
-                />
-                <div className="md:col-span-3 md:pl-12">
-                  <h3 className="font-display text-[clamp(1.6rem,3.2vw,2.8rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-titanium-50">
-                    {e.role}
-                  </h3>
-                  <p className="mt-2 font-serif text-xl text-titanium-300">{e.company}</p>
-                  {e.points.map((p) => (
-                    <p key={p} className="mt-4 max-w-2xl leading-relaxed text-titanium-400">
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
       </div>
     </section>
   );

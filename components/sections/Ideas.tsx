@@ -27,7 +27,7 @@ export function Ideas() {
         defaults: { ease: "none" },
         scrollTrigger: { trigger: pin.current, start: "top top", end: "+=230%", pin: true, scrub: 0.8 },
       });
-      if (driver) tl.fromTo(driver, { order: 0.42 }, { order: 1, duration: 2.2, ease: "power1.inOut" }, 0.2);
+      if (driver) tl.fromTo(driver, { order: 0.5 }, { order: 1, duration: 2.2, ease: "power1.inOut" }, 0.2);
 
       tl.from("[data-w-ideas]", { xPercent: -20, opacity: 0, duration: 0.5 }, 0)
         .from("[data-w-into]", { opacity: 0, y: 30, duration: 0.4 }, 0.7)

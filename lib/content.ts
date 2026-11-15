@@ -199,8 +199,8 @@ export const portraits = {
    * file is a 600×451 crop of a generated image and is shown near native size.
    */
   hero: {
-    src: "/images/portraits/edit/hero-portrait.webp",
-    w: 600,
+    src: "/images/portraits/edit/hero-tall.webp",
+    w: 400,
     h: 451,
     position: "50% 30%",
     placeholder: true,
@@ -220,6 +220,7 @@ export const perspective = [
 export const nav = [
   { id: "ideas", label: "Ideas", n: "01" },
   { id: "journey", label: "About", n: "02" },
+  { id: "experience", label: "Experience", n: "02b" },
   { id: "laboratory", label: "Work", n: "03" },
   { id: "intelligence", label: "Skills", n: "04" },
   { id: "recognition", label: "Recognition", n: "05" },
@@ -371,5 +372,100 @@ export const archive: ArchiveProject[] = [
       "A research pipeline combining U-Net lung segmentation, DenseNet121 classification and Grad-CAM heatmaps so predictions come with visual evidence.",
     pipeline: ["Radiograph input", "U-Net lung segmentation", "DenseNet121 classification", "Grad-CAM saliency", "Heatmap overlay"],
     stack: ["PyTorch", "U-Net", "DenseNet121", "Grad-CAM", "OpenCV"],
+  },
+];
+
+/* ───────────── The Doors of Experience ─────────────
+   Every statement below is taken from the résumé (internship entries
+   and the CrawlNews / RentYourMate project lines). */
+
+export type DoorPanel = { id: string; kicker: string; title: string; body: string; points?: string[] };
+
+export type ExperienceDoor = {
+  id: string;
+  number: string;
+  plate: string;
+  company: string;
+  role: string;
+  period: string;
+  environment: string;
+  summary: string;
+  panels: DoorPanel[];
+};
+
+export const doors: ExperienceDoor[] = [
+  {
+    id: "crawlcorp",
+    number: "01",
+    plate: "01 · CRAWL CORP",
+    company: "Crawl Corp India Private Limited",
+    role: "Junior AI Engineer Intern",
+    period: "Jul 2026 — Present",
+    environment: "The Intelligence Studio",
+    summary:
+      "Engineering CrawlNews and RentYourMate end-to-end — AI pipeline design, LLM fine-tuning, and full-stack development.",
+    panels: [
+      {
+        id: "crawlnews",
+        kicker: "Exhibit A — CrawlNews",
+        title: "A multi-agent news intelligence pipeline",
+        body: "An AI-agent pipeline across 31 RSS sources on a 15-minute scheduled cycle.",
+        points: ["Collection", "Deduplication", "Event clustering", "Relevance filtering", "Fact verification", "LLM summarization"],
+      },
+      {
+        id: "rentyourmate",
+        kicker: "Exhibit B — RentYourMate",
+        title: "A verified-companion marketplace",
+        body: "Full-stack: Flutter, Node.js / Express, PostgreSQL and Firebase — with secure booking and payment workflows, KYC / selfie verification and role-based access.",
+        points: ["Flutter client", "Node.js · Express API", "PostgreSQL · Firebase"],
+      },
+      {
+        id: "practice",
+        kicker: "Exhibit C — Engineering practice",
+        title: "Three disciplines, end-to-end",
+        body: "The work at Crawl Corp spans the whole stack of an AI product.",
+        points: ["AI pipeline design", "LLM fine-tuning", "Full-stack development"],
+      },
+    ],
+  },
+  {
+    id: "1m1b",
+    number: "02",
+    plate: "02 · 1M1B",
+    company: "1M1B (1 Million for 1 Billion)",
+    role: "Green Intern",
+    period: "Sep — Oct 2025",
+    environment: "The Sustainability Gallery",
+    summary:
+      "Contributed data-driven research to sustainability-focused technology initiatives serving 1M+ beneficiaries.",
+    panels: [
+      {
+        id: "green",
+        kicker: "Green internship",
+        title: "Research for sustainability-focused technology",
+        body: "Contributed data-driven research to sustainability-focused technology initiatives.",
+        points: ["Data-driven research", "Sustainability-focused technology initiatives", "Initiatives serving 1M+ beneficiaries"],
+      },
+    ],
+  },
+  {
+    id: "novitech",
+    number: "03",
+    plate: "03 · NOVITECH",
+    company: "NoviTech R&D Private Limited",
+    role: "Data Analyst Intern",
+    period: "Sep — Oct 2024",
+    environment: "The Data Laboratory",
+    summary:
+      "Built data-cleaning and visualization pipelines (Python, Pandas, Matplotlib), cutting preprocessing time 40% for recurring reporting cycles.",
+    panels: [
+      {
+        id: "data",
+        kicker: "Data cleaning & visualization",
+        title: "From raw data to clear reporting",
+        body: "Built data-cleaning and visualization pipelines for recurring reporting cycles.",
+        points: ["Python", "Pandas", "Matplotlib", "Data-cleaning pipelines", "Visualization pipelines", "Preprocessing time cut by 40%"],
+      },
+    ],
   },
 ];

@@ -1,25 +1,48 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { hero, portraits, profile, resumeUrl } from "@/lib/content";
-import { useLenis } from "@/components/providers/SmoothScroll";
+import { MagneticLink } from "@/components/ui/MagneticLink";
 import { useStage } from "@/components/stage/SculptureStage";
 
-const FIGURES = [
-  { src: portraits.hero.src, position: portraits.hero.position, caption: "Fig. 1 — In the studio" },
-  { src: portraits.monochrome.src, position: "60% 30%", caption: "Fig. 2 — Light study" },
-] as const;
-
+/**
+ * Editorial cover. Left: identity, introduction and a layered headline.
+ * Right: the studio photograph on three depth planes (rose ground, photo,
+ * gold hairline frame) that move at different rates; scrolling locks the
+ * frame onto the photograph. The IDEA → INTELLIGENCE sculpture sits in the
+ * gutter between headline and photograph.
+ */
 export function Hero() {
   const section = useRef<HTMLElement>(null);
-  const lenis = useLenis();
   const stage = useStage();
-  const [figure, setFigure] = useState(0);
   const [curtain, setCurtain] = useState(true);
+
+  // Pointer parallax — each plane moves at its own depth.
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 60, damping: 18 });
+  const sy = useSpring(my, { stiffness: 60, damping: 18 });
+  const groundX = useTransform(sx, (v) => v * -16);
+  const groundY = useTransform(sy, (v) => v * -12);
+  const photoX = useTransform(sx, (v) => v * -5);
+  const photoY = useTransform(sy, (v) => v * -4);
+  const frameX = useTransform(sx, (v) => v * 10);
+  const frameY = useTransform(sy, (v) => v * 8);
+  const typeX = useTransform(sx, (v) => v * 6);
+
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      mx.set((e.clientX / window.innerWidth) * 2 - 1);
+      my.set((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [mx, my]);
 
   useGSAP(
     () => {
@@ -31,159 +54,174 @@ export function Hero() {
         if (driver) gsap.set(driver, { intro: 1 });
       } else {
         const tl = gsap.timeline();
-        // A burgundy title card lifts like a cover page.
-        tl.from("[data-card-line]", { yPercent: 110, duration: 1, ease: "expo.out" }, 0.1)
-          .to("[data-curtain]", { clipPath: "inset(0% 0% 100% 0%)", duration: 1.15, ease: "expo.inOut" }, 1.05)
+        tl.from("[data-card-line]", { yPercent: 110, duration: 0.9, ease: "expo.out" }, 0.1)
+          .to("[data-curtain]", { clipPath: "inset(0% 0% 100% 0%)", duration: 1.1, ease: "expo.inOut" }, 0.9)
           .add(() => setCurtain(false))
-          .fromTo(
-            "[data-photo]",
-            { clipPath: "inset(0% 0% 100% 0%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut" },
-            1.3,
-          )
-          .from("[data-photo-img]", { scale: 1.1, duration: 2, ease: "expo.out" }, 1.3)
-          .from("[data-h-word]", { yPercent: 105, duration: 1.4, stagger: 0.1, ease: "expo.out" }, 1.55)
-          .from("[data-h-fade]", { y: 14, opacity: 0, duration: 1, stagger: 0.07, ease: "power3.out" }, 1.9);
-        if (driver) tl.to(driver, { intro: 1, duration: 2.6, ease: "power3.out" }, 1.5);
+          // photograph: ground slides in, photo is uncovered, frame draws on
+          .from("[data-ground]", { xPercent: -14, opacity: 0, duration: 1.4, ease: "expo.out" }, 1.15)
+          .fromTo("[data-photo]", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut" }, 1.25)
+          .from("[data-photo-img]", { scale: 1.08, duration: 2, ease: "expo.out" }, 1.25)
+          .from("[data-frame]", { opacity: 0, scale: 1.06, duration: 1.4, ease: "expo.out" }, 1.75)
+          .from("[data-mark]", { opacity: 0, duration: 0.6, stagger: 0.05 }, 2.1)
+          // typography: the serif rises, the rule draws, the sans slides under it
+          .from("[data-ideas]", { yPercent: 100, duration: 1.4, ease: "expo.out" }, 1.45)
+          .from("[data-rule]", { scaleX: 0, transformOrigin: "left", duration: 0.9, ease: "expo.inOut" }, 1.85)
+          .from("[data-into]", { opacity: 0, x: -10, duration: 0.7 }, 2.05)
+          .from("[data-intel]", { yPercent: 100, duration: 1.3, ease: "expo.out" }, 1.95)
+          .from("[data-fade]", { y: 14, opacity: 0, duration: 0.9, stagger: 0.06, ease: "power3.out" }, 2.1);
+        if (driver) tl.to(driver, { intro: 1, duration: 2.6, ease: "power3.out" }, 1.6);
       }
 
+      // Scroll: the gold frame locks onto the photograph; sculpture travels on.
+      const st = { trigger: section.current, start: "top top", end: "bottom top", scrub: true };
+      gsap.fromTo("[data-frame-lock]", { xPercent: 5, yPercent: -4 }, { xPercent: 0, yPercent: 0, ease: "none", scrollTrigger: st });
+      gsap.fromTo("[data-ground-lock]", { xPercent: -9, yPercent: 7 }, { xPercent: -15, yPercent: 11, ease: "none", scrollTrigger: st });
+      gsap.to("[data-copy]", { yPercent: -10, opacity: 0.2, ease: "none", scrollTrigger: { ...st, end: "75% top" } });
       if (driver) {
-        ScrollTrigger.create({
-          trigger: section.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-          onUpdate: (self) => gsap.set(driver, { travel: self.progress }),
-        });
+        ScrollTrigger.create({ ...st, onUpdate: (self) => gsap.set(driver, { travel: self.progress }) });
       }
-      gsap.to("[data-h-drift]", {
-        yPercent: -18,
-        ease: "none",
-        scrollTrigger: { trigger: section.current, start: "top top", end: "bottom top", scrub: true },
-      });
     },
     { scope: section },
   );
 
-  const goWork = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (lenis) lenis.scrollTo("#laboratory", { duration: 2 });
-    else document.getElementById("laboratory")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <section ref={section} id="top" aria-label="Introduction" className="theme-ivory relative min-h-[100svh] overflow-hidden lg:h-[100svh] lg:min-h-[740px]">
+    <section ref={section} id="top" aria-label="Introduction" className="theme-ivory relative overflow-hidden lg:h-[100svh] lg:min-h-[760px]">
       {curtain && (
         <div data-curtain className="fixed inset-0 z-[70] flex items-center justify-center bg-burgundy text-ivory" style={{ clipPath: "inset(0% 0% 0% 0%)" }}>
-          <p className="overflow-hidden text-center font-display text-[clamp(1.6rem,4vw,3rem)] font-semibold leading-none tracking-[-0.03em]">
+          <p className="overflow-hidden text-center font-editorial text-[clamp(1.8rem,4.4vw,3.4rem)] leading-none">
             <span data-card-line className="block">Prasanna Raj R.</span>
           </p>
         </div>
       )}
 
-      <div className="container-noir relative flex min-h-[100svh] flex-col pb-8 pt-24 lg:h-full lg:min-h-0 lg:pt-28">
-        {/* Left column beside the photograph */}
-        <div data-h-drift className="relative z-10 order-1 lg:w-[38%]">
-          <div data-h-fade>
-            <p className="font-display text-[1.35rem] font-bold leading-none tracking-[-0.02em] text-burgundy">{profile.name}.</p>
-            <p className="mt-1.5 text-sm font-medium text-titanium-400">{hero.role}.</p>
+      <div className="container-noir relative grid min-h-[100svh] gap-x-8 pb-10 pt-24 lg:h-full lg:min-h-0 lg:grid-cols-12 lg:pt-28">
+        {/* ───── Left column ───── */}
+        <div data-copy className="relative z-10 flex flex-col lg:col-span-7">
+          <div data-fade className="flex items-center gap-3 whitespace-nowrap text-[0.62rem] font-medium uppercase tracking-[0.14em] text-titanium-400 sm:gap-4 sm:text-[0.7rem] sm:tracking-[0.22em]">
+            <span>Portfolio · 2026</span>
+            <span className="h-px w-6 bg-line sm:w-10" />
+            <span>{profile.location.split(",")[0]}, India</span>
           </div>
-          <span data-h-fade aria-hidden className="mt-8 block h-px w-14 bg-gold" />
-          <p data-h-fade className="mt-8 hidden max-w-[24rem] font-serif text-[1.4rem] leading-[1.35] text-espresso lg:block">
-            I build intelligent systems that connect artificial intelligence with real-world problems.
-          </p>
-          <div data-h-fade className="mt-8 hidden flex-wrap items-center gap-x-7 gap-y-3 text-[0.95rem] font-medium lg:flex">
-            <a href="#laboratory" onClick={goWork} className="group inline-flex items-center gap-2 text-burgundy">
-              <span className="border-b-2 border-burgundy pb-0.5">Selected work</span>
-              <ArrowDownRight className="size-4 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
-            </a>
-            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5 text-titanium-400 transition-colors hover:text-burgundy">
-              Résumé
-              <ArrowUpRight className="size-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </a>
+
+          <div data-fade className="mt-9">
+            <p className="font-display text-[1.5rem] font-bold leading-none tracking-[-0.02em] text-burgundy">{profile.name}.</p>
+            <p className="mt-2 text-[0.95rem] font-medium text-espresso">{hero.role}.</p>
           </div>
-        </div>
 
-        {/* Photograph — natural colour, native resolution, upper right */}
-        <figure className="relative order-2 -mr-[var(--gutter)] mt-8 lg:absolute lg:right-0 lg:top-[10%] lg:mr-0 lg:mt-0 lg:w-[min(814px,53vw)]">
-          <button
-            type="button"
-            data-photo
-            onClick={() => setFigure((f) => (f + 1) % FIGURES.length)}
-            className="relative block aspect-[814/451] w-full cursor-pointer overflow-hidden bg-espresso outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
-            aria-label={`Show the other photograph (currently ${FIGURES[figure].caption})`}
-          >
-            <div data-photo-img className="absolute inset-0">
-              {FIGURES.map((f, i) => (
-                <motion.div
-                  key={f.src}
-                  className="absolute inset-0"
-                  initial={false}
-                  animate={{ clipPath: figure === i ? "inset(0% 0% 0% 0%)" : i === 0 ? "inset(0% 100% 0% 0%)" : "inset(0% 0% 0% 100%)" }}
-                  transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
-                >
-                  <Image
-                    src={f.src}
-                    alt={`${profile.name} — ${f.caption}`}
-                    fill
-                    priority={i === 0}
-                    sizes="(max-width: 1023px) 100vw, 814px"
-                    className="object-cover"
-                    style={{ objectPosition: f.position }}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </button>
-          <figcaption data-h-fade className="mt-3 flex items-baseline justify-between gap-4 pr-[var(--gutter)] text-[0.78rem] text-titanium-400">
-            <AnimatePresence mode="wait">
-              <motion.span key={figure} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3 }} className="text-espresso">
-                {FIGURES[figure].caption}
-              </motion.span>
-            </AnimatePresence>
-            <span>Click the photograph</span>
-          </figcaption>
-        </figure>
+          <div className="mt-8 max-w-[29rem]">
+            <p data-fade className="text-[1.02rem] font-semibold leading-snug text-espresso">{hero.tagline}</p>
+            <p data-fade className="mt-3 font-serif text-[1.22rem] leading-[1.4] text-titanium-300">
+              I build intelligent systems that connect artificial intelligence with real-world problems.
+            </p>
+          </div>
 
-        {/* Headline — full width beneath the photograph */}
-        <h1 className="relative z-10 order-3 mt-10 text-burgundy lg:absolute lg:bottom-[5%] lg:left-[var(--gutter)] lg:right-[var(--gutter)] lg:mt-0">
-          <span className="sr-only">{profile.name}, {hero.role}. </span>
-          <span className="flex flex-wrap items-baseline gap-x-[0.18em] overflow-hidden" style={{ fontSize: "clamp(3.2rem, 9.4vw, 10.5rem)" }}>
-            <span data-h-word className="block font-display font-extralight leading-[0.95] tracking-[-0.055em]">Ideas</span>
-            <span data-h-word className="block font-serif text-[0.42em] leading-none text-espresso">into</span>
-          </span>
-          <span className="block overflow-hidden" style={{ fontSize: "clamp(3.2rem, 9.4vw, 10.5rem)" }}>
-            <span data-h-word className="block font-display font-extrabold leading-[0.92] tracking-[-0.05em]">
-              Intelligence<span className="text-gold">.</span>
-            </span>
-          </span>
-        </h1>
-
-        {/* Mobile standfirst */}
-        <div className="order-4 mt-8 lg:hidden">
-          <p className="font-serif text-[1.25rem] leading-[1.35] text-espresso">
-            I build intelligent systems that connect artificial intelligence with real-world problems.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-3 text-[0.95rem] font-medium">
-            <a href="#laboratory" onClick={goWork} className="inline-flex items-center gap-2 text-burgundy">
-              <span className="border-b-2 border-burgundy pb-0.5">Selected work</span>
-              <ArrowDownRight className="size-4" />
-            </a>
-            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-titanium-400">
+          <div data-fade className="mt-8 flex flex-wrap items-center gap-3">
+            <MagneticLink href="#laboratory" variant="primary" className="rounded-none px-6">
+              Selected work <ArrowDownRight className="size-4" />
+            </MagneticLink>
+            <MagneticLink href={resumeUrl} external className="rounded-none px-6">
               Résumé <ArrowUpRight className="size-4" />
-            </a>
+            </MagneticLink>
           </div>
+
+          {/* Layered headline */}
+          <motion.h1 style={{ x: typeX }} className="relative mt-14 text-burgundy lg:mt-auto">
+            <span className="sr-only">
+              {profile.name}, {hero.role}. Ideas into intelligence.
+            </span>
+            <span aria-hidden data-fade className="absolute -top-6 left-1 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-titanium-400">
+              (n.) — Fig. 01
+            </span>
+            <span aria-hidden className="flex items-end gap-5">
+              <span className="block overflow-hidden pb-[0.06em]">
+                <span data-ideas className="block font-editorial leading-[0.82] tracking-[-0.025em]" style={{ fontSize: "clamp(4.6rem, 11.6vw, 12.8rem)" }}>
+                  Ideas
+                </span>
+              </span>
+              <span className="mb-[1.6vw] flex items-center gap-3">
+                <span data-rule className="block h-px w-[clamp(2.5rem,5vw,5rem)] bg-gold" />
+                <span data-into className="text-[clamp(0.75rem,1vw,0.95rem)] font-medium uppercase tracking-[0.42em] text-espresso">into</span>
+              </span>
+            </span>
+            <span aria-hidden className="-mt-[0.32em] block overflow-hidden pl-[0.85em]" style={{ fontSize: "clamp(2.7rem, 6vw, 6.6rem)" }}>
+              <span data-intel className="block font-display font-extrabold leading-[0.95] tracking-[-0.05em] text-espresso">
+                Intelligence<span className="text-gold">.</span>
+              </span>
+            </span>
+            <span aria-hidden data-fade className="mt-3 block pl-[0.15em] font-serif text-[0.95rem] text-titanium-400">
+              ↳ the work of turning an idea into a system that thinks.
+            </span>
+          </motion.h1>
         </div>
 
-        {/* Hotspot over the sculpture */}
+        {/* ───── Right column: the photograph on three planes ───── */}
+        <div className="relative mt-16 flex items-start justify-end lg:col-span-5 lg:mt-0 lg:items-center">
+          <figure className="relative w-[min(400px,82vw)]">
+            {/* plane 1 — dusty-rose ground */}
+            <motion.div style={{ x: groundX, y: groundY }} className="absolute inset-0" aria-hidden>
+              <div data-ground-lock className="absolute inset-0">
+                <div data-ground className="h-full w-full bg-rose-deep/80" />
+              </div>
+            </motion.div>
+
+            {/* plane 2 — the photograph (native 400 × 451) */}
+            <motion.div style={{ x: photoX, y: photoY }} className="relative">
+              <div data-photo className="relative aspect-[400/451] w-full overflow-hidden bg-espresso">
+                <div data-photo-img className="absolute inset-0">
+                  <Image
+                    src={portraits.hero.src}
+                    alt={`${profile.name}, ${hero.role}`}
+                    fill
+                    priority
+                    sizes="(max-width: 1023px) 82vw, 400px"
+                    className="object-cover"
+                    style={{ objectPosition: portraits.hero.position }}
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* plane 3 — gold hairline frame; scrolling locks it onto the photo */}
+            <motion.div style={{ x: frameX, y: frameY }} className="pointer-events-none absolute inset-0" aria-hidden>
+              <div data-frame-lock className="absolute inset-0">
+                <div data-frame className="absolute inset-0 border border-gold" />
+              </div>
+            </motion.div>
+
+            {/* registration marks */}
+            {[
+              "-left-4 -top-4 border-l border-t",
+              "-right-4 -top-4 border-r border-t",
+              "-bottom-4 -left-4 border-b border-l",
+              "-bottom-4 -right-4 border-b border-r",
+            ].map((c) => (
+              <span key={c} data-mark aria-hidden className={`absolute size-3 border-espresso/50 ${c}`} />
+            ))}
+
+            <figcaption data-fade className="mt-7 flex items-baseline justify-between gap-4 text-[0.75rem] text-titanium-400">
+              <span className="text-espresso">Fig. 1 — In the studio</span>
+              <span>Bengaluru</span>
+            </figcaption>
+
+            <span
+              aria-hidden
+              data-fade
+              className="absolute -right-10 top-0 hidden h-[451px] max-h-full rotate-180 items-center whitespace-nowrap text-[0.65rem] font-medium uppercase tracking-[0.3em] text-titanium-500 [writing-mode:vertical-rl] xl:flex"
+            >
+              Prasanna Raj R. — Portrait
+            </span>
+          </figure>
+        </div>
+
+        {/* Click target over the sculpture (gutter between headline and photo) */}
         <button
           type="button"
           onClick={() => stage?.scatter()}
-          aria-label="Scatter the sculpture"
-          className="group absolute left-[38%] top-[34%] z-10 hidden h-[26%] w-[14%] items-end justify-center lg:flex"
+          aria-label="Take the sculpture apart and watch it reassemble"
+          className="group absolute bottom-[8%] left-[57%] z-10 hidden h-[26%] w-[8%] items-end justify-center xl:flex"
         >
-          <span data-h-fade className="translate-y-6 text-[0.72rem] text-titanium-400 transition-colors group-hover:text-burgundy">
-            Click to rearrange
+          <span data-fade className="translate-y-5 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-titanium-500 transition-colors group-hover:text-burgundy">
+            Idea → Intelligence
           </span>
         </button>
       </div>

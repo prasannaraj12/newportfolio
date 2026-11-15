@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
+import { Bodoni_Moda, Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
 
@@ -21,6 +21,12 @@ const newsreader = Newsreader({
   display: "swap",
 });
 
+const bodoni = Bodoni_Moda({
+  subsets: ["latin"],
+  variable: "--font-bodoni",
+  display: "swap",
+});
+
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
@@ -39,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f3efe6",
+  themeColor: "#f5f0e8",
   colorScheme: "light",
 };
 
@@ -47,7 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable}`}
+      className={`${bricolage.variable} ${bodoni.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable}`}
     >
       <body>
         <SmoothScroll>{children}</SmoothScroll>
