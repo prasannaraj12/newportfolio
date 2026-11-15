@@ -1,34 +1,52 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { nav } from "@/lib/content";
+import { nav, resumeUrl } from "@/lib/content";
 import { useLenis } from "@/components/providers/SmoothScroll";
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
+/**
+ * Plain-word navigation. Drawn in ivory with difference blending so it reads
+ * as ink on paper sections and as paper on graphite ones — it changes with
+ * the page instead of sitting on a bar.
+ */
 export function Nav() {
   const lenis = useLenis();
-  const { scrollY } = useScroll();
-  const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const [current, setCurrent] = useState<string>("");
+  const [current, setCurrent] = useState<string | null>(null);
+  const [onBurgundy, setOnBurgundy] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setScrolled(y > 40);
-    setHidden(y > prev && y > 400 && !open);
-  });
+  // Switch to ivory ink while a burgundy room sits under the header.
+  useEffect(() => {
+    const rooms = Array.from(document.querySelectorAll<HTMLElement>(".theme-burgundy"));
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => setOnBurgundy(e.isIntersecting)),
+      { rootMargin: "0px 0px -94% 0px" },
+    );
+    rooms.forEach((r) => io.observe(r));
+    return () => io.disconnect();
+  }, []);
 
-  // Active-section tracking.
   useEffect(() => {
     const els = nav.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setCurrent(e.target.id)),
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) setCurrent(e.target.id);
+        }),
       { rootMargin: "-45% 0px -50% 0px" },
     );
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    const onTop = () => {
+      if (window.scrollY < window.innerHeight * 0.5) setCurrent(null);
+    };
+    window.addEventListener("scroll", onTop, { passive: true });
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onTop);
+    };
   }, []);
 
   useEffect(() => {
@@ -44,93 +62,87 @@ export function Nav() {
     else document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const currentLabel = nav.find((n) => n.id === current)?.label;
+
   return (
     <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: hidden ? -90 : 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: hidden ? 0 : 0.4 }}
-        className="fixed inset-x-0 top-0 z-50"
-      >
-        <div className="container-noir pt-4">
-          <nav
-            className={`flex items-center justify-between rounded-full border px-4 py-2.5 transition-[background,border-color,backdrop-filter] duration-500 md:px-5 ${
-              scrolled
-                ? "border-hairline bg-obsidian/70 backdrop-blur-xl"
-                : "border-transparent bg-transparent"
-            }`}
-            aria-label="Primary"
-          >
-            <a href="#top" onClick={go("top")} className="group flex items-center gap-2.5">
-              <span className="font-serif text-xl italic leading-none text-titanium-50">PR</span>
-              <span className="h-4 w-px rotate-[20deg] bg-volt-bright" />
-              <span className="font-mono text-[0.68rem] tracking-[0.3em] text-titanium-300 transition-colors group-hover:text-titanium-50">NEURALVERSE</span>
-            </a>
+      <header className={`pointer-events-none fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${onBurgundy ? "text-ivory" : "text-burgundy"}`}>
+        <div className="container-noir flex items-start justify-between gap-6 pt-5">
+          <a href="#top" onClick={go("top")} className="pointer-events-auto flex items-baseline gap-3">
+            <span className="font-display text-[1.05rem] font-bold tracking-[-0.02em]">PR.</span>
+            <span className="relative hidden h-5 min-w-[9rem] overflow-hidden text-[0.85rem] sm:block">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={currentLabel ?? "home"}
+                  initial={{ y: "100%" }}
+                  animate={{ y: "0%" }}
+                  exit={{ y: "-100%" }}
+                  transition={{ duration: 0.45, ease }}
+                  className="absolute left-0 top-0 whitespace-nowrap opacity-70"
+                >
+                  {currentLabel ? `— ${currentLabel}` : "— Portfolio, 2026"}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </a>
 
-            <ul className="hidden items-center gap-1 lg:flex">
+          <nav aria-label="Primary" className="pointer-events-auto hidden lg:block">
+            <ul className="flex items-center gap-7 text-[0.9rem]">
               {nav.map((n) => (
                 <li key={n.id}>
                   <a
                     href={`#${n.id}`}
                     onClick={go(n.id)}
-                    className={`relative flex items-baseline gap-1.5 px-3 py-1.5 text-[0.8rem] transition-colors ${
-                      current === n.id ? "text-white" : "text-titanium-400 hover:text-titanium-100"
-                    }`}
+                    className={`relative transition-opacity duration-300 ${current === n.id ? "opacity-100" : "opacity-60 hover:opacity-100"}`}
                   >
-                    {current === n.id && (
-                      <motion.span
-                        layoutId="nav-pill"
-                        className="absolute inset-x-3 -bottom-0.5 h-px bg-volt-bright"
-                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                      />
-                    )}
-                    <span className="font-mono text-[0.58rem] text-titanium-500">{n.n}</span>
                     {n.label}
+                    {current === n.id && (
+                      <motion.span layoutId="nav-mark" className="absolute -bottom-1.5 left-0 right-0 h-px bg-current" transition={{ duration: 0.5, ease }} />
+                    )}
                   </a>
                 </li>
               ))}
+              <li>
+                <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="opacity-60 transition-opacity hover:opacity-100">
+                  Résumé ↗
+                </a>
+              </li>
             </ul>
-
-            <button
-              type="button"
-              className="grid size-9 place-items-center rounded-full border border-hairline-strong text-titanium-100 lg:hidden"
-              onClick={() => setOpen((o) => !o)}
-              aria-expanded={open}
-              aria-label={open ? "Close menu" : "Open menu"}
-            >
-              {open ? <X className="size-4" /> : <Menu className="size-4" />}
-            </button>
           </nav>
+
+          <button type="button" className="pointer-events-auto text-[0.9rem] lg:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+            {open ? "Close" : "Menu"}
+          </button>
         </div>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 bg-void/95 backdrop-blur-xl lg:hidden"
+            initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
+            animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+            exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
+            transition={{ duration: 0.7, ease }}
+            className="fixed inset-0 z-40 bg-rose text-burgundy lg:hidden"
           >
-            <ul className="container-noir flex h-full flex-col justify-center gap-2">
+            <ul className="container-noir flex h-full flex-col justify-center gap-1">
               {nav.map((n, i) => (
                 <motion.li
                   key={n.id}
                   initial={{ y: 40, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.05 * i + 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.15 + 0.05 * i, duration: 0.6, ease }}
                 >
-                  <a
-                    href={`#${n.id}`}
-                    onClick={go(n.id)}
-                    className="flex items-baseline gap-4 py-2 font-serif text-5xl italic tracking-tight text-titanium-100"
-                  >
-                    <span className="font-mono text-xs text-volt-bright">{n.n}</span>
+                  <a href={`#${n.id}`} onClick={go(n.id)} className="block py-1.5 font-display text-5xl font-bold tracking-[-0.04em]">
                     {n.label}
                   </a>
                 </motion.li>
               ))}
+              <li className="mt-6">
+                <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="text-lg underline decoration-gold underline-offset-4">
+                  Résumé ↗
+                </a>
+              </li>
             </ul>
           </motion.div>
         )}

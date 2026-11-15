@@ -23,9 +23,9 @@ export function AgentDBDiagram() {
       <svg viewBox="0 0 600 600" className="mx-auto w-full max-w-[620px]" role="img" aria-label="AgentDB orchestration diagram">
         <defs>
           <radialGradient id="adb-core" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#f4f6f9" />
-            <stop offset="55%" stopColor="#7c8697" />
-            <stop offset="100%" stopColor="#141922" />
+            <stop offset="0%" stopColor="#a5566a" />
+            <stop offset="55%" stopColor="#702c3b" />
+            <stop offset="100%" stopColor="#4a1c27" />
           </radialGradient>
         </defs>
 

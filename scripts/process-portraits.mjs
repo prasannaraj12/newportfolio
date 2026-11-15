@@ -16,6 +16,9 @@ const jobs = [
   { file: "02-monochrome-portrait.jpg", out: "monochrome", box: { left: 30, top: 0, width: 796, height: 470 } },
   // Transition: drop the strip along the top edge.
   { file: "03-double-exposure-portrait.jpg", out: "double-exposure", box: { left: 0, top: 20, width: 836, height: 451 } },
+  // Hero placeholder: subject-centred crop of the studio portrait. Shown near
+  // native size — replace with the original high-resolution photograph.
+  { file: "04-studio-portrait.jpg", out: "hero-portrait", box: { left: 118, top: 20, width: 600, height: 451 } },
   // Contact background: drop the strip along the top and left edges.
   { file: "04-studio-portrait.jpg", out: "studio", box: { left: 22, top: 20, width: 814, height: 451 } },
 ];

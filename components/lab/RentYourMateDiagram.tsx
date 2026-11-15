@@ -75,7 +75,7 @@ function Stack() {
               className="absolute inset-x-0 aspect-square border transition-[transform,background,border-color] duration-700 ease-[var(--ease-cinematic)]"
               style={{
                 transform: `translateZ(${lift}px)`,
-                background: hover === i ? "rgb(94 160 255 / 0.18)" : `rgb(198 205 216 / ${0.05 + i * 0.03})`,
+                background: hover === i ? "rgb(112 44 59 / 0.16)" : `rgb(112 44 59 / ${0.04 + i * 0.03})`,
                 borderColor: hover === i ? "var(--color-volt-bright)" : "var(--color-hairline-strong)",
               }}
             >

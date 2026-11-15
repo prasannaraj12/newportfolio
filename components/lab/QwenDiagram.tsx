@@ -15,7 +15,7 @@ const quant = (v: number) => Math.round(v * 15) / 15; // 16 levels = 4-bit
 
 function shade(v: number) {
   const l = Math.round(18 + v * 62);
-  return `hsl(215 12% ${l}%)`;
+  return `hsl(350 24% ${l}%)`;
 }
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -34,11 +34,11 @@ export function QwenDiagram() {
       <div className="relative flex items-center justify-center gap-3 py-6 sm:gap-5">
         {/* W — frozen */}
         <div>
-          <div className="mb-2 flex items-center justify-between font-mono text-[0.62rem] uppercase tracking-[0.2em] text-titanium-600">
+          <div className="mb-2 flex items-center justify-between font-mono text-[0.62rem] uppercase tracking-[0.2em] text-titanium-400">
             <span>W {quantized ? "· 4-bit" : "· fp16"}</span>
             <Lock className="size-3" aria-label="frozen" />
           </div>
-          <div className="grid grid-cols-10 gap-[2px] bg-void/10 p-[2px]" aria-hidden>
+          <div className="grid grid-cols-10 gap-[2px] bg-titanium-50/10 p-[2px]" aria-hidden>
             {W.map((v, i) => (
               <span
                 key={i}
@@ -60,7 +60,7 @@ export function QwenDiagram() {
               className="flex items-center gap-2 sm:gap-3"
               aria-hidden
             >
-              <span className="font-serif text-3xl italic text-void">+</span>
+              <span className="font-serif text-3xl text-titanium-50">+</span>
               <div>
                 <p className="mb-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-volt-deep">B</p>
                 <div className="grid grid-cols-2 gap-[2px]">
@@ -74,7 +74,7 @@ export function QwenDiagram() {
                   ))}
                 </div>
               </div>
-              <span className="font-mono text-sm text-titanium-600">×</span>
+              <span className="font-mono text-sm text-titanium-400">×</span>
               <div>
                 <p className="mb-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-volt-deep">A</p>
                 <div className="grid grid-cols-10 gap-[2px]">
@@ -99,7 +99,7 @@ export function QwenDiagram() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6, ease }}
-              className="absolute -bottom-2 right-0 bg-void px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-titanium-50"
+              className="absolute -bottom-2 right-0 bg-burgundy px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ivory"
             >
               → optimized inference
             </motion.div>
@@ -108,7 +108,7 @@ export function QwenDiagram() {
       </div>
 
       {/* Stage rail */}
-      <ol className="mt-6 grid grid-cols-5 border-t border-void/20">
+      <ol className="mt-6 grid grid-cols-5 border-t border-titanium-50/20">
         {qwenStages.map((st, i) => (
           <li key={st.id}>
             <button
@@ -118,13 +118,13 @@ export function QwenDiagram() {
               className="group relative w-full pt-4 text-left"
             >
               <span
-                className="absolute inset-x-0 -top-px h-[2px] origin-left bg-void transition-transform duration-700"
+                className="absolute inset-x-0 -top-px h-[2px] origin-left bg-titanium-50 transition-transform duration-700"
                 style={{ transform: `scaleX(${i <= stage ? 1 : 0})` }}
               />
-              <span className="block font-mono text-[0.6rem] text-titanium-600">{String(i + 1).padStart(2, "0")}</span>
+              <span className="block font-mono text-[0.6rem] text-titanium-400">{String(i + 1).padStart(2, "0")}</span>
               <span
                 className={`mt-1 block pr-2 text-[0.72rem] leading-tight transition-colors sm:text-[0.82rem] ${
-                  i === stage ? "font-semibold text-void" : "text-titanium-600 group-hover:text-void"
+                  i === stage ? "font-semibold text-titanium-50" : "text-titanium-400 group-hover:text-titanium-50"
                 }`}
               >
                 {st.name}
@@ -141,7 +141,7 @@ export function QwenDiagram() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.4, ease }}
-          className="mt-6 max-w-md text-[0.92rem] leading-relaxed text-titanium-600"
+          className="mt-6 max-w-md text-[0.92rem] leading-relaxed text-titanium-400"
         >
           <span className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-volt-deep">{s.tool} — </span>
           {s.does}

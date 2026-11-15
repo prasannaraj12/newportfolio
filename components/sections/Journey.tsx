@@ -75,11 +75,9 @@ export function Journey() {
   const words = `${profile.summary} ${profile.summaryDetail}`.split(" ");
 
   return (
-    <section ref={root} id="journey" aria-label="The Journey" className="relative bg-void pb-28 pt-24 md:pb-40 md:pt-32">
+    <section ref={root} id="journey" aria-label="The Journey" className="theme-rose relative pb-28 pt-24 md:pb-40 md:pt-32">
       <div className="container-noir">
         <p className="label mb-8 flex items-center gap-3">
-          <span className="text-volt-bright">02</span>
-          <span className="h-px w-8 bg-titanium-500" />
           The Journey
         </p>
 
@@ -115,7 +113,7 @@ export function Journey() {
           </span>
           <span
             aria-hidden
-            className="absolute left-[3%] top-[-0.35em] font-serif italic text-titanium-50"
+            className="absolute left-[3%] top-[-0.35em] font-serif text-titanium-50"
             style={{ fontSize: "clamp(2.2rem, 6vw, 6rem)" }}
           >
             The
@@ -152,7 +150,7 @@ export function Journey() {
         {/* Experience */}
         <div className="mt-28 md:mt-40">
           <div className="mb-12 flex items-end justify-between gap-6 border-b border-hairline pb-5">
-            <p className="font-serif text-3xl italic text-titanium-50 md:text-4xl">Internship experience</p>
+            <p className="font-serif text-3xl text-titanium-50 md:text-4xl">Internship experience</p>
             <p className="label hidden md:block">{String(experience.length).padStart(2, "0")} roles</p>
           </div>
 
@@ -176,7 +174,7 @@ export function Journey() {
                   <h3 className="font-display text-[clamp(1.6rem,3.2vw,2.8rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-titanium-50">
                     {e.role}
                   </h3>
-                  <p className="mt-2 font-serif text-xl italic text-titanium-300">{e.company}</p>
+                  <p className="mt-2 font-serif text-xl text-titanium-300">{e.company}</p>
                   {e.points.map((p) => (
                     <p key={p} className="mt-4 max-w-2xl leading-relaxed text-titanium-400">
                       {p}

@@ -1,5 +1,5 @@
 /**
- * NEURALVERSE content layer.
+ * Portfolio content layer — Prasanna Raj R.
  * Source of truth: Prasanna Raj R — résumé (Prasannaraj_Resume.pdf).
  * Do not add claims, metrics or statistics that are not in the résumé.
  */
@@ -176,17 +176,35 @@ export const achievements = {
   ],
 } as const;
 
+export const brand = {
+  mark: "PRASANNA.",
+  monogram: "PR",
+  edition: "Personal Portfolio · 2026",
+  index: "Portfolio / 001",
+} as const;
+
 export const hero = {
-  lineOne: "I build things",
-  lineTwo: "that think.",
+  statement: "Building what comes next.",
   role: "AI Engineer",
+  disciplines: "AI Engineer · Generative AI · Intelligent Systems",
   tagline: "Building Intelligent, Real-World AI Solutions.",
 } as const;
 
 export const resumeUrl = "/Prasanna-Raj-R-Resume.pdf";
 
 export const portraits = {
-  hero: { src: "/images/portraits/edit/hero.webp", w: 548, h: 470 },
+  /**
+   * HERO PORTRAIT SLOT — replace with the original high-resolution photograph
+   * (e.g. /images/portraits/original/prasanna.jpg) and update w/h. The current
+   * file is a 600×451 crop of a generated image and is shown near native size.
+   */
+  hero: {
+    src: "/images/portraits/edit/hero-portrait.webp",
+    w: 600,
+    h: 451,
+    position: "50% 30%",
+    placeholder: true,
+  },
   monochrome: { src: "/images/portraits/edit/monochrome.webp", w: 796, h: 470 },
   doubleExposure: { src: "/images/portraits/edit/double-exposure.webp", w: 836, h: 451 },
   studio: { src: "/images/portraits/edit/studio.webp", w: 814, h: 451 },
@@ -200,12 +218,12 @@ export const perspective = [
 ] as const;
 
 export const nav = [
-  { id: "perspective", label: "Perspective", n: "01" },
-  { id: "journey", label: "Journey", n: "02" },
-  { id: "laboratory", label: "Laboratory", n: "03" },
-  { id: "intelligence", label: "Intelligence", n: "04" },
+  { id: "ideas", label: "Ideas", n: "01" },
+  { id: "journey", label: "About", n: "02" },
+  { id: "laboratory", label: "Work", n: "03" },
+  { id: "intelligence", label: "Skills", n: "04" },
   { id: "recognition", label: "Recognition", n: "05" },
-  { id: "connection", label: "Connection", n: "06" },
+  { id: "connection", label: "Contact", n: "06" },
 ] as const;
 
 /* ───────────── Exhibition diagram data (Laboratory) ───────────── */
@@ -248,3 +266,110 @@ export const rymTrust = [
   { id: "booking", name: "Booking", does: "Secure booking workflow." },
   { id: "payment", name: "Payment", does: "Secure payment workflow." },
 ] as const;
+
+
+/* ───────────── Archive (additional projects) ─────────────
+   Source: project READMEs and the owner's previous portfolio data.
+   Only descriptions and pipeline stages are used — no unverified results. */
+
+export type ArchiveProject = {
+  id: string;
+  title: string;
+  subtitle: string;
+  domain: string;
+  context?: string;
+  overview: string;
+  pipeline: string[];
+  stack: string[];
+  link?: { label: string; href: string };
+};
+
+export const archive: ArchiveProject[] = [
+  {
+    id: "trust-cv",
+    title: "TRUST-CV",
+    subtitle: "Zero-trust computer-vision integrity assurance",
+    domain: "Computer Vision · Security",
+    context: "Smart India Hackathon — SIH26228",
+    overview:
+      "An air-gapped assurance platform that keeps a cryptographic chain of custody across a computer-vision pipeline — from dataset ingestion to model identity to signed inference provenance.",
+    pipeline: [
+      "Dataset ingestion & Merkle sealing",
+      "Training-data integrity checks",
+      "Model identity hashing",
+      "Behavioural fingerprinting",
+      "Signed inference provenance",
+      "Assurance reports",
+    ],
+    stack: ["Python", "SHA-256 Merkle trees", "ECDSA", "SQLite", "NumPy", "Computer Vision"],
+    link: { label: "GitHub — Block-Sentinal", href: "https://github.com/prasannaraj12/Block-Sentinal" },
+  },
+  {
+    id: "satquery",
+    title: "SatQuery AI",
+    subtitle: "Remote-sensing vision-language assistant",
+    domain: "Computer Vision · Vision-Language",
+    context: "Smart India Hackathon — problem statement 26167",
+    overview:
+      "A multimodal assistant for remote-sensing imagery: visual question answering, grounding and captioning, optical + SAR reasoning and bi-temporal change analysis.",
+    pipeline: [
+      "GeoTIFF ingestion & metadata",
+      "Optical / SAR modality classification",
+      "Multispectral encoder (BigEarthNet adaptation)",
+      "Agentic reasoning tools",
+      "VQA · grounding · captioning",
+    ],
+    stack: ["PyTorch", "GeoTIFF", "BigEarthNet", "Multispectral", "SAR", "Docker"],
+    link: { label: "GitHub — SATQuery", href: "https://github.com/prasannaraj12/SATQuery" },
+  },
+  {
+    id: "fakeo",
+    title: "Fakeo",
+    subtitle: "Multimodal misinformation detection",
+    domain: "Machine Learning · NLP",
+    overview:
+      "Fake-news detection across raw text and screenshots: OCR extracts text from images, spaCy picks out entities, and a TF-IDF + XGBoost classifier scores the claim.",
+    pipeline: ["Text or screenshot input", "OCR (pytesseract)", "Named entities (spaCy)", "TF-IDF features", "XGBoost classifier", "Flask API"],
+    stack: ["XGBoost", "TF-IDF", "pytesseract", "spaCy", "Flask", "Python"],
+  },
+  {
+    id: "urbanbloom",
+    title: "UrbanBloom AI",
+    subtitle: "Smart irrigation and soil-moisture system",
+    domain: "IoT · Applied AI",
+    overview:
+      "An ESP32-based irrigation system: soil-moisture sensing drives relay-controlled pumps, while telemetry feeds a Gemini-assisted app.",
+    pipeline: ["Soil-moisture sensors", "ESP32 / Arduino controller", "Relay & pump actuation", "Wi-Fi telemetry", "Gemini integration", "Mobile & web UI"],
+    stack: ["ESP32", "Arduino", "C++", "React Native", "Gemini"],
+  },
+  {
+    id: "pocketai",
+    title: "PocketAI",
+    subtitle: "Portable, offline local-LLM desktop assistant",
+    domain: "Generative AI · On-device",
+    overview:
+      "A self-contained local LLM that runs from a USB drive on an ordinary Windows laptop — CPU inference with llama.cpp and a quantized Qwen2.5 model, no GPU or install required.",
+    pipeline: ["USB launcher", "Hardware readiness check", "llama.cpp runtime (CPU)", "Qwen2.5 GGUF model", "Desktop assistant UI"],
+    stack: ["llama.cpp", "Qwen2.5 (GGUF)", "Windows", "Local inference"],
+  },
+  {
+    id: "player-reid",
+    title: "Player Re-Identification",
+    subtitle: "Sports tracking and re-identification",
+    domain: "Computer Vision",
+    overview:
+      "Detects players with YOLOv5 and keeps their identities across frames with DeepSORT appearance embeddings and Kalman-filter tracking.",
+    pipeline: ["Video frames", "YOLOv5 detection", "Appearance embeddings", "Association", "Kalman tracking", "Re-ID annotation"],
+    stack: ["YOLOv5", "DeepSORT", "PyTorch", "OpenCV"],
+  },
+  {
+    id: "chest-xray",
+    title: "Chest X-Ray AI",
+    subtitle: "Radiograph classification with explainability",
+    domain: "Computer Vision · Medical imaging (research)",
+    overview:
+      "A research pipeline combining U-Net lung segmentation, DenseNet121 classification and Grad-CAM heatmaps so predictions come with visual evidence.",
+    pipeline: ["Radiograph input", "U-Net lung segmentation", "DenseNet121 classification", "Grad-CAM saliency", "Heatmap overlay"],
+    stack: ["PyTorch", "U-Net", "DenseNet121", "Grad-CAM", "OpenCV"],
+  },
+];

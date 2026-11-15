@@ -1,50 +1,102 @@
 @import "tailwindcss";
 
-/* ───────────────────────── TITANIUM NOIR ─────────────────────────
-   Obsidian surfaces · brushed titanium type · electric-blue signal.
-   All colors are tokens; components never hardcode hex values.      */
+/* ───────────────────────── PRASANNA — BURGUNDY EDITORIAL ─────────────────────────
+   Warm ivory paper dominates; burgundy is the signature; dusty rose for selected
+   rooms; antique gold only as micro-accent; warm espresso for reading text.
+   Token names are stable; each "room" class remaps their values.                  */
 
 @theme {
-  /* Obsidian scale */
-  --color-void: #030405;
-  --color-obsidian: #07090c;
-  --color-onyx: #0c0f14;
-  --color-graphite: #141922;
-  --color-gunmetal: #1d2430;
+  /* Ground — warm ivory paper (base room) */
+  --color-void: #f3efe6;
+  --color-obsidian: #ece6da;
+  --color-onyx: #e5ddcf;
+  --color-graphite: #f3efe6;
+  --color-gunmetal: #ddd3c4;
 
-  /* Titanium scale (metallic silver) */
-  --color-titanium-50: #f4f6f9;
-  --color-titanium-100: #e3e7ee;
-  --color-titanium-200: #c6cdd8;
-  --color-titanium-300: #a2abb9;
-  --color-titanium-400: #7c8697;
-  --color-titanium-500: #5a6373;
-  --color-titanium-600: #3d4452;
+  /* Ink — 50 is the signature (burgundy), 100–200 espresso reading text */
+  --color-titanium-50: #702c3b;
+  --color-titanium-100: #403638;
+  --color-titanium-200: #403638;
+  --color-titanium-300: #564a4c;
+  --color-titanium-400: #6f6264;
+  --color-titanium-500: #8c7f80;
+  --color-titanium-600: #b3a7a6;
 
-  /* Electric blue signal */
-  --color-volt: #2f7bff;
-  --color-volt-bright: #5ea0ff;
-  --color-volt-glow: #9cc4ff;
-  --color-volt-deep: #1546b8;
+  /* Signal */
+  --color-volt: #702c3b;
+  --color-volt-bright: #702c3b;
+  --color-volt-glow: #b58b60;
+  --color-volt-deep: #571f2c;
+
+  /* Fixed palette (never remapped) */
+  --color-ivory: #f3efe6;
+  --color-burgundy: #702c3b;
+  --color-rose: #e7d5d2;
+  --color-gold: #b58b60;
+  --color-espresso: #403638;
+  --color-ink: #702c3b;
+  --color-silver: #8c7f80;
+  --color-terracotta: #702c3b;
 
   /* Lines */
-  --color-hairline: rgb(198 205 216 / 0.09);
-  --color-hairline-strong: rgb(198 205 216 / 0.18);
+  --color-hairline: rgb(64 54 56 / 0.14);
+  --color-hairline-strong: rgb(64 54 56 / 0.26);
 
-  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
 
   --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-titanium: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --tracking-label: 0.22em;
+  --tracking-label: 0.12em;
+}
+
+/* Ivory room (same as base, explicit background). */
+.theme-ivory {
+  background-color: var(--color-void);
+  color: var(--color-titanium-200);
+}
+
+/* Dusty-rose room. */
+.theme-rose {
+  --color-void: #e7d5d2;
+  --color-obsidian: #e0cbc7;
+  --color-onyx: #d8c0bc;
+  --color-titanium-500: #806c6d;
+  --color-titanium-600: #a48f8f;
+  --color-hairline: rgb(64 54 56 / 0.16);
+  --color-hairline-strong: rgb(64 54 56 / 0.3);
+  background-color: var(--color-void);
+  color: var(--color-titanium-200);
+}
+
+/* Burgundy room — the one full-colour space. */
+.theme-burgundy {
+  --color-void: #702c3b;
+  --color-obsidian: #7a3443;
+  --color-onyx: #843c4c;
+  --color-titanium-50: #f3efe6;
+  --color-titanium-100: #f0e7de;
+  --color-titanium-200: #e7d5d2;
+  --color-titanium-300: #dcc3bf;
+  --color-titanium-400: #cba9a5;
+  --color-titanium-500: #b48c89;
+  --color-titanium-600: #9a6f6e;
+  --color-volt: #b58b60;
+  --color-volt-bright: #c9a079;
+  --color-volt-deep: #b58b60;
+  --color-terracotta: #b58b60;
+  --color-hairline: rgb(243 239 230 / 0.16);
+  --color-hairline-strong: rgb(243 239 230 / 0.3);
+  background-color: var(--color-void);
+  color: var(--color-titanium-200);
 }
 
 :root {
-  color-scheme: dark;
-  --gutter: clamp(1rem, 4vw, 3.5rem);
+  color-scheme: light;
+  --gutter: clamp(1.1rem, 4vw, 3.5rem);
 }
 
 html {
@@ -74,8 +126,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-volt);
-  color: var(--color-titanium-50);
+  background: var(--color-burgundy);
+  color: var(--color-ivory);
 }
 
 /* ───────── Utilities ───────── */
@@ -87,45 +139,29 @@ body {
   padding-inline: var(--gutter);
 }
 
-/* Brushed-metal text fill */
+/* Formerly a metallic gradient — now plain ink. */
 @utility text-titanium {
-  background: linear-gradient(
-    176deg,
-    var(--color-titanium-50) 0%,
-    var(--color-titanium-200) 38%,
-    var(--color-titanium-500) 62%,
-    var(--color-titanium-100) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-titanium-50);
 }
 
 @utility text-volt-gradient {
-  background: linear-gradient(100deg, var(--color-volt-glow), var(--color-volt) 60%, var(--color-volt-deep));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-volt);
 }
 
+/* Small caps-style label: sans, quiet, not "terminal". */
 @utility label {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-titanium-400);
 }
 
-/* Machined glass panel */
 @utility panel {
   position: relative;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.008)),
-    var(--color-onyx);
+  background: var(--color-onyx);
   border: 1px solid var(--color-hairline);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.05),
-    0 30px 60px -30px rgb(0 0 0 / 0.8);
 }
 
 /* Film grain overlay — static SVG noise, no per-frame cost */
@@ -134,7 +170,8 @@ body {
   position: fixed;
   inset: 0;
   z-index: 60;
-  opacity: 0.05;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 

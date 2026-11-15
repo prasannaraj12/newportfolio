@@ -50,7 +50,7 @@ export function CrawlNewsDiagram() {
                 onClick={() => select(i)}
                 className="cursor-pointer outline-none"
               >
-                <rect x={STAGE_X[i] - 60} y={0} width={120} height={440} fill={on ? "rgb(47 123 255 / 0.06)" : "transparent"} style={{ transition: "fill 0.4s" }} />
+                <rect x={STAGE_X[i] - 60} y={0} width={120} height={440} fill={on ? "rgb(112 44 59 / 0.07)" : "transparent"} style={{ transition: "fill 0.4s" }} />
                 <line
                   x1={STAGE_X[i]}
                   x2={STAGE_X[i]}

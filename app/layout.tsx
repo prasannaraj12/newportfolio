@@ -1,19 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
 
-const interTight = Inter_Tight({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-inter-tight",
+  variable: "--font-bricolage",
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
+const instrument = Instrument_Sans({
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  variable: "--font-instrument",
+  display: "swap",
+});
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-newsreader",
   display: "swap",
 });
 
@@ -24,21 +28,26 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NEURALVERSE — Prasanna Raj R",
+  title: "Prasanna Raj R — AI Engineer",
   description:
-    "Prasanna Raj R — AI/ML Engineer specializing in Generative AI, LLM applications and Agentic AI systems.",
+    "Prasanna Raj R — AI Engineer. Ideas into intelligence: agentic AI, LLM fine-tuning and real-world AI systems.",
+  openGraph: {
+    title: "Prasanna Raj R — AI Engineer",
+    description: "Ideas into intelligence: agentic AI, LLM fine-tuning and real-world AI systems.",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#030405",
-  colorScheme: "dark",
+  themeColor: "#f3efe6",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${interTight.variable} ${instrumentSerif.variable} ${jetbrains.variable}`}
+      className={`${bricolage.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable}`}
     >
       <body>
         <SmoothScroll>{children}</SmoothScroll>

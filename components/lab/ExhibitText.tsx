@@ -16,7 +16,7 @@ export function ExhibitText({ project, letter, theme = "dark", className = "" }:
 
   return (
     <div className={className}>
-      <p className={`font-mono text-[0.68rem] uppercase tracking-[0.22em] ${muted}`}>
+      <p className={`text-[0.72rem] font-medium uppercase tracking-[0.12em] ${muted}`}>
         <span className={light ? "text-volt-deep" : "text-volt-bright"}>Exhibit {letter}</span>
         <span className="mx-2">/</span>
         {project.index}
@@ -34,7 +34,7 @@ export function ExhibitText({ project, letter, theme = "dark", className = "" }:
       >
         {project.title}
       </h3>
-      <p className={`mt-3 font-serif text-[1.45rem] italic leading-snug ${light ? "text-titanium-600" : "text-titanium-300"}`}>
+      <p className={`mt-3 font-serif text-[1.45rem] leading-snug ${light ? "text-titanium-600" : "text-titanium-300"}`}>
         {project.subtitle}
       </p>
       <p className={`mt-6 max-w-lg text-[0.95rem] leading-relaxed ${light ? "text-titanium-600" : "text-titanium-400"}`}>
@@ -50,8 +50,8 @@ export function ExhibitText({ project, letter, theme = "dark", className = "" }:
         ))}
       </dl>
 
-      <p className={`mt-6 font-mono text-[0.68rem] leading-relaxed tracking-wide ${muted}`}>
-        <span className="uppercase tracking-[0.2em]">Materials — </span>
+      <p className={`mt-6 text-[0.78rem] leading-relaxed ${muted}`}>
+        <span className="font-medium">Built with — </span>
         {project.stack.join(" / ")}
       </p>
     </div>

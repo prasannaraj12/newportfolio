@@ -53,13 +53,14 @@ function Sculpture({ form, detail }: { form: Form; detail: number }) {
       uAmp: { value: form.amp },
       uTwist: { value: form.twist },
     };
+    // Burgundy lacquer over metal — the signature colour as a material.
     const material = new THREE.MeshPhysicalMaterial({
-      color: "#d9dee6",
-      metalness: 1,
-      roughness: 0.14,
+      color: "#7a2e3f",
+      metalness: 0.55,
+      roughness: 0.2,
       clearcoat: 1,
-      clearcoatRoughness: 0.08,
-      envMapIntensity: 1.35,
+      clearcoatRoughness: 0.06,
+      envMapIntensity: 1.3,
     });
     material.onBeforeCompile = (shader) => {
       Object.assign(shader.uniforms, uniforms);
@@ -127,11 +128,14 @@ export default function LiquidMetal({ form, active }: { form: Form; active: bool
       camera={{ position: [0, 0, 5.2], fov: 35 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance", stencil: false }}
     >
+      <ambientLight intensity={0.5} color="#fff3ea" />
+      <directionalLight position={[-3, 4, 5]} intensity={1.8} color="#fff1e4" />
       <Environment resolution={128} frames={1}>
         <Lightformer form="rect" intensity={3} position={[0, 4, -2]} scale={[10, 1, 1]} />
         <Lightformer form="rect" intensity={1.6} position={[-5, 0, 2]} rotation-y={Math.PI / 2} scale={[6, 0.5, 1]} />
         <Lightformer form="rect" intensity={1.2} position={[5, -2, 1]} rotation-y={-Math.PI / 2} scale={[6, 2, 1]} />
-        <Lightformer form="rect" color="#2f7bff" intensity={2.4} position={[0, -4, 1]} rotation-x={Math.PI / 2} scale={[3, 0.6, 1]} />
+        <Lightformer form="rect" color="#e7d5d2" intensity={1.6} position={[0, -4, 1]} rotation-x={Math.PI / 2} scale={[6, 1.2, 1]} />
+        <Lightformer form="rect" color="#b58b60" intensity={0.8} position={[4, 3, -2]} rotation-y={-Math.PI / 3} scale={[2, 4, 1]} />
       </Environment>
       <Sculpture form={form} detail={lowPower ? 28 : 40} />
     </Canvas>

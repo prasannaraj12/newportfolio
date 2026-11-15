@@ -41,11 +41,9 @@ export function Intelligence() {
       <div className="container-noir grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-6">
           <p className="label mb-6 flex items-center gap-3">
-            <span className="text-volt-bright">04</span>
-            <span className="h-px w-8 bg-titanium-500" />
             The Intelligence
           </p>
-          <h2 className="mb-12 max-w-md font-serif text-[clamp(2rem,3.6vw,3.2rem)] italic leading-[1.05] text-titanium-100">
+          <h2 className="mb-12 max-w-md font-serif text-[clamp(2rem,3.6vw,3.2rem)] leading-[1.05] text-titanium-100">
             {total} modules across {skills.length} domains — select one to reshape the form.
           </h2>
 

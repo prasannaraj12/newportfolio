@@ -9,6 +9,8 @@ import { AgentDBDiagram } from "./AgentDBDiagram";
 import { QwenDiagram } from "./QwenDiagram";
 import { CrawlNewsDiagram } from "./CrawlNewsDiagram";
 import { RentYourMateDiagram } from "./RentYourMateDiagram";
+import { Archive } from "./Archive";
+import { HashChainExhibit } from "./HashChainExhibit";
 
 const byId = Object.fromEntries(projects.map((p) => [p.id, p]));
 const WORD = "LABORATORY";
@@ -63,8 +65,6 @@ export function Laboratory() {
       {/* Spatial typography intro */}
       <div data-lab-intro className="relative flex h-[100svh] flex-col items-center justify-center overflow-hidden">
         <p className="label absolute left-[var(--gutter)] top-[12svh] flex items-center gap-3">
-          <span className="text-volt-bright">03</span>
-          <span className="h-px w-8 bg-titanium-500" />
           The Laboratory
         </p>
         <h2
@@ -78,8 +78,8 @@ export function Laboratory() {
             </span>
           ))}
         </h2>
-        <p data-lab-sub className="mt-6 max-w-md px-6 text-center font-serif text-xl italic text-titanium-300 md:text-2xl">
-          Four systems, each exhibited as it works — not as a card.
+        <p data-lab-sub className="mt-6 max-w-md px-6 text-center font-serif text-xl text-titanium-300 md:text-2xl">
+          Eleven systems. Five exhibited as they work, six more in the archive.
         </p>
       </div>
 
@@ -87,7 +87,7 @@ export function Laboratory() {
       <article data-exhibit className="relative overflow-hidden border-t border-hairline py-24 md:py-36">
         <span
           aria-hidden
-          className="pointer-events-none absolute -left-[4vw] top-10 select-none font-serif italic leading-none text-transparent"
+          className="pointer-events-none absolute -left-[4vw] top-10 select-none font-serif leading-none text-transparent"
           style={{ fontSize: "clamp(16rem, 38vw, 40rem)", WebkitTextStroke: "1px var(--color-hairline-strong)" }}
         >
           A
@@ -103,13 +103,13 @@ export function Laboratory() {
       </article>
 
       {/* Exhibit B — Qwen (light room) */}
-      <article data-exhibit className="relative bg-titanium-100 py-24 text-void md:py-36">
+      <article data-exhibit className="theme-rose relative py-24 md:py-36">
         <div className="container-noir grid gap-14 lg:grid-cols-12 lg:items-center">
           <div data-exhibit-reveal className="order-2 lg:order-1 lg:col-span-7">
             <QwenDiagram />
           </div>
           <div data-exhibit-reveal className="order-1 lg:order-2 lg:col-span-4 lg:col-start-9">
-            <ExhibitText project={byId.qwen} letter="B" theme="light" />
+            <ExhibitText project={byId.qwen} letter="B" />
           </div>
         </div>
       </article>
@@ -119,7 +119,7 @@ export function Laboratory() {
         <div className="container-noir">
           <div data-exhibit-reveal className="grid gap-10 lg:grid-cols-12">
             <ExhibitText project={byId.crawlnews} letter="C" className="lg:col-span-6" />
-            <p className="self-end font-serif text-2xl italic leading-snug text-titanium-400 lg:col-span-5 lg:col-start-8">
+            <p className="self-end font-serif text-2xl leading-snug text-titanium-400 lg:col-span-5 lg:col-start-8">
               Hover a stage to follow the signal from source to summary.
             </p>
           </div>
@@ -130,7 +130,7 @@ export function Laboratory() {
       </article>
 
       {/* Exhibit D — RentYourMate (graphite room) */}
-      <article data-exhibit className="relative bg-onyx py-24 md:py-36">
+      <article data-exhibit className="theme-rose relative py-24 md:py-36">
         <div className="container-noir grid gap-14 lg:grid-cols-12 lg:items-center">
           <div data-exhibit-reveal className="lg:col-span-6">
             <RentYourMateDiagram />
@@ -141,8 +141,12 @@ export function Laboratory() {
         </div>
       </article>
 
+      <HashChainExhibit />
+
+      <Archive />
+
       <p className="container-noir py-8 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-titanium-500">
-        Diagrams are schematic illustrations of the systems described in the résumé.
+        Diagrams are schematic illustrations of each system — not screenshots.
       </p>
     </section>
   );
