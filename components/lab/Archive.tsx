@@ -5,8 +5,8 @@ import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { archive as all, type ArchiveProject } from "@/lib/content";
 
-// TRUST-CV has its own exhibit; the archive holds the rest.
-const archive = all.filter((p) => p.id !== "trust-cv");
+// TRUST-CV and SatQuery have their own rooms; the archive holds the rest.
+const archive = all.filter((p) => p.id !== "trust-cv" && p.id !== "satquery");
 
 const ease = [0.16, 1, 0.3, 1] as const;
 

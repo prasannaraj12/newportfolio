@@ -287,6 +287,16 @@ export type ArchiveProject = {
 
 export const archive: ArchiveProject[] = [
   {
+    id: "qwen",
+    title: "Qwen Fine-Tuning",
+    subtitle: "LLM fine-tuning with QLoRA / PEFT",
+    domain: "Generative AI · Fine-tuning",
+    overview:
+      "Fine-tuned an open-weight Qwen model end-to-end using supervised fine-tuning with LoRA/QLoRA and PEFT, applied bitsandbytes 4-bit quantization and validated outputs before deploying for optimized inference.",
+    pipeline: ["Open-weight Qwen base", "4-bit quantization (bitsandbytes)", "LoRA adapters (PEFT)", "Supervised fine-tuning (TRL · Unsloth)", "Validate & deploy"],
+    stack: ["Hugging Face Transformers", "PEFT", "TRL", "Unsloth", "bitsandbytes"],
+  },
+  {
     id: "trust-cv",
     title: "TRUST-CV",
     subtitle: "Zero-trust computer-vision integrity assurance",
