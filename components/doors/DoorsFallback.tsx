@@ -65,7 +65,8 @@ export function DoorsFallback() {
                   {d.panels.map((p) => (
                     <li key={p.id}>
                       <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-gold">{p.kicker}</p>
-                      {p.points && <p className="mt-1 text-[0.9rem] text-espresso">{p.points.join(" · ")}</p>}
+                      <p className="mt-1 text-[0.92rem] text-espresso">{p.body}</p>
+                      {p.points && <p className="mt-1 text-[0.85rem] text-titanium-400">{p.points.join(" · ")}</p>}
                     </li>
                   ))}
                 </ul>

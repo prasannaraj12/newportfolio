@@ -197,6 +197,36 @@ function Cinematic() {
 
   return (
     <div ref={pin} className="relative h-[100svh] overflow-hidden bg-[#efe8dc]">
+      {/* Full text of the experience for screen readers, copy and search —
+          the visible overlays below are timed to the camera and hidden otherwise. */}
+      <div className="sr-only">
+        <h3>Internship experience</h3>
+        <ol>
+          {doors.map((d) => (
+            <li key={d.id}>
+              <h4>
+                {d.role}, {d.company}
+              </h4>
+              <p>{d.period}</p>
+              <p>{d.summary}</p>
+              {d.panels.map((p) => (
+                <div key={p.id}>
+                  <p>
+                    {p.title}. {p.body}
+                  </p>
+                  {p.points && (
+                    <ul>
+                      {p.points.map((pt) => (
+                        <li key={pt}>{pt}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </li>
+          ))}
+        </ol>
+      </div>
       <div className="absolute inset-0">
         <DoorsScene driver={driver} active={active} />
       </div>
@@ -221,7 +251,7 @@ function Cinematic() {
 
         {/* Door labels */}
         {doors.map((d, i) => (
-          <div key={d.id} data-ov={`door${i}`} className="invisible absolute bottom-[7svh] left-[var(--gutter)] max-w-sm border-l-2 border-gold bg-ivory/92 px-6 py-5">
+          <div key={d.id} aria-hidden data-ov={`door${i}`} className="invisible absolute bottom-[7svh] left-[var(--gutter)] max-w-sm border-l-2 border-gold bg-ivory/92 px-6 py-5">
             <p className="font-display text-5xl font-extralight leading-none text-burgundy">{d.number}</p>
             <p className="mt-3 font-display text-xl font-bold leading-tight tracking-[-0.02em] text-burgundy">{d.company}</p>
             <p className="mt-1 text-[0.92rem] text-espresso">{d.role}</p>
@@ -234,6 +264,7 @@ function Cinematic() {
           d.panels.map((p, k) => (
             <div
               key={p.id}
+              aria-hidden
               data-ov={`p${i}-${k}`}
               className={`invisible absolute bottom-[8svh] max-w-[25rem] bg-ivory/94 px-7 py-6 shadow-[0_30px_60px_-30px_rgb(64_54_56/0.35)] ${
                 i === 0 && k === 0 ? "right-[var(--gutter)]" : i === 0 && k === 2 ? "left-[var(--gutter)]" : "right-[var(--gutter)]"
