@@ -61,10 +61,10 @@ export function Recognition() {
             {finals.map((h, i) => (
               <li key={h.name} data-frame className={`${i === 1 ? "sm:mt-12" : ""}`}>
                 {/* hanging wire */}
-                <span aria-hidden className="mx-auto block h-8 w-px bg-[#4c4140]/40" />
+                <span aria-hidden className="mx-auto block h-8 w-px bg-[#292322]/40" />
                 {/* frame → mount → citation */}
                 <div className="bg-burgundy p-2 shadow-[0_40px_60px_-34px_rgba(76,65,64,0.6)]">
-                  <div className="border border-[#c6a77b]/60 bg-[#fbf7f1] px-6 pb-7 pt-9 text-center">
+                  <div className="border border-[#c9a777]/60 bg-[#fbf7f1] px-6 pb-7 pt-9 text-center">
                     <p className="text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-gold">Exhibit · {String(i + 1).padStart(2, "0")}</p>
                     <p className="mt-6 font-editorial text-[clamp(1.7rem,2.4vw,2.3rem)] leading-[1.05] text-burgundy">{h.name}</p>
                     <span aria-hidden className="mx-auto mt-5 block h-px w-10 bg-gold" />

@@ -5,7 +5,7 @@ export function createMaterials() {
   const stone = new THREE.MeshStandardMaterial({ color: "#ede6da", roughness: 0.92, metalness: 0 });
   const stoneLight = new THREE.MeshStandardMaterial({ color: "#f6f2ea", roughness: 0.8 });
   const floor = new THREE.MeshStandardMaterial({ color: "#e6dece", roughness: 0.28, metalness: 0.05, envMapIntensity: 0.9 });
-  const ceiling = new THREE.MeshStandardMaterial({ color: "#f5efe6", roughness: 1 });
+  const ceiling = new THREE.MeshStandardMaterial({ color: "#f7f1e9", roughness: 1 });
   const glow = new THREE.MeshBasicMaterial({ color: "#fff6e6", toneMapped: false });
   const burgundy = new THREE.MeshPhysicalMaterial({
     color: "#702c3b",
@@ -17,7 +17,7 @@ export function createMaterials() {
   const burgundyDeep = new THREE.MeshPhysicalMaterial({ color: "#5c2230", roughness: 0.45, clearcoat: 0.6, clearcoatRoughness: 0.3 });
   const mutedBurgundy = new THREE.MeshPhysicalMaterial({ color: "#7d4250", roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.3 });
   const sage = new THREE.MeshStandardMaterial({ color: "#a7b39b", roughness: 0.7 });
-  const gold = new THREE.MeshStandardMaterial({ color: "#c6a77b", metalness: 1, roughness: 0.32, envMapIntensity: 1.3 });
+  const gold = new THREE.MeshStandardMaterial({ color: "#c9a777", metalness: 1, roughness: 0.32, envMapIntensity: 1.3 });
   const rose = new THREE.MeshStandardMaterial({ color: "#e8d8d2", roughness: 0.85 });
   const espresso = new THREE.MeshStandardMaterial({ color: "#403638", roughness: 0.6 });
 
@@ -43,7 +43,7 @@ export function nameplateTexture(text: string) {
   const g = ctx.createLinearGradient(0, 0, w, h);
   g.addColorStop(0, "#9a7148");
   g.addColorStop(0.35, "#d1ad84");
-  g.addColorStop(0.55, "#c6a77b");
+  g.addColorStop(0.55, "#c9a777");
   g.addColorStop(1, "#8a643f");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);

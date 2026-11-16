@@ -190,7 +190,7 @@ export const hero = {
   tagline: "Building Intelligent, Real-World AI Solutions.",
   headline: "I turn ambitious ideas into intelligent systems.",
   intro:
-    "I specialise in generative AI, LLM applications and agentic systems — multi-agent pipelines, retrieval workflows and fine-tuned open-weight models.",
+    "I specialise in Generative AI, LLM applications, agent systems and end-to-end AI pipelines — from idea to deployment.",
 } as const;
 
 export const resumeUrl = "/Prasanna-Raj-R-Resume.pdf";
@@ -199,11 +199,11 @@ export const portraits = {
   /**
    * HERO PORTRAIT SLOT — replace with the original high-resolution photograph
    * (e.g. /images/portraits/original/prasanna.jpg) and update w/h. The current
-   * file is a 600×451 crop of a generated image and is shown near native size.
+   * file is a 420×451 crop of a generated image and is shown near native size.
    */
   hero: {
-    src: "/images/portraits/edit/hero-tall.webp",
-    w: 400,
+    src: "/images/portraits/edit/hero-cover.webp",
+    w: 420,
     h: 451,
     position: "50% 30%",
     placeholder: true,
@@ -213,12 +213,6 @@ export const portraits = {
   studio: { src: "/images/portraits/edit/studio.webp", w: 814, h: 451 },
 } as const;
 
-/** Perspective statements — each one maps to work listed in the résumé. */
-export const perspective = [
-  { lead: "Agents", rest: "that reason.", ref: "AgentDB — LangGraph ReAct" },
-  { lead: "Models", rest: "that adapt.", ref: "Qwen — QLoRA / PEFT" },
-  { lead: "Pipelines", rest: "that keep watch.", ref: "CrawlNews — 15-minute cycle" },
-] as const;
 
 export const nav = [
   { id: "ideas", label: "Ideas", n: "01" },

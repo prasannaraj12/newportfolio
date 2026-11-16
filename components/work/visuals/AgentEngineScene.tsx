@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { ContactShadows, Environment, Html, Lightformer, PerformanceMonitor } from "@react-three/drei";
+import { ContactShadows, Environment, Lightformer, PerformanceMonitor } from "@react-three/drei";
 import type { MotionValue } from "motion/react";
 import * as THREE from "three";
 import { agentdbTools } from "@/lib/content";
@@ -14,16 +14,19 @@ const win = (t: number, a: number, b: number) => {
   return x * x * (3 - 2 * x);
 };
 
+/** Places the DOM labels (index 0 = agent title, 1–5 = tools) each frame. */
+export type LabelLayer = { place: (i: number, x: number, y: number, show: boolean) => void };
+
 type Props = {
   progress: MotionValue<number>;
   selected: number;
-  onSelect: (i: number | null) => void;
+  labels: LabelLayer;
   active: boolean;
 };
 
 const angle = (i: number) => ((-90 + i * 72) * Math.PI) / 180;
 
-function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
+function Engine({ progress, selected, labels }: Omit<Props, "active">) {
   const tools = useRef<(THREE.Group | null)[]>([]);
   const links = useRef<(THREE.Mesh | null)[]>([]);
   const tops = useRef<(THREE.Mesh | null)[]>([]);
@@ -33,15 +36,22 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
   const mats = useMemo(() => {
     const stone = new THREE.MeshStandardMaterial({ color: "#efe7dc", roughness: 0.85 });
     const stoneDark = new THREE.MeshStandardMaterial({ color: "#e3d8ca", roughness: 0.9 });
-    const lacquer = new THREE.MeshPhysicalMaterial({ color: "#702c40", roughness: 0.32, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.12 });
-    const brass = new THREE.MeshStandardMaterial({ color: "#c6a77b", metalness: 1, roughness: 0.3, envMapIntensity: 1.3 });
-    const top = new THREE.MeshStandardMaterial({ color: "#702c40", roughness: 0.5 });
+    const lacquer = new THREE.MeshPhysicalMaterial({ color: "#741f38", roughness: 0.32, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.12 });
+    const brass = new THREE.MeshStandardMaterial({ color: "#c9a777", metalness: 1, roughness: 0.3, envMapIntensity: 1.3 });
+    const top = new THREE.MeshStandardMaterial({ color: "#741f38", roughness: 0.5 });
     // Satin brass for the selected tool: lit by direct light, not only reflections.
     const lit = new THREE.MeshStandardMaterial({ color: "#c9a271", metalness: 0.45, roughness: 0.35, emissive: new THREE.Color("#5a3d1d"), emissiveIntensity: 0.35 });
     const all = [stone, stoneDark, lacquer, brass, top, lit];
     return { stone, stoneDark, lacquer, brass, top, lit, dispose: () => all.forEach((m) => m.dispose()) };
   }, []);
   useEffect(() => () => mats.dispose(), [mats]);
+
+  // Label anchors in world space: the agent's crown, then above each tool.
+  const anchors = useMemo(
+    () => [new THREE.Vector3(0, 2.35, 0), ...agentdbTools.map((_, i) => new THREE.Vector3(Math.cos(angle(i)) * R_TOOLS, 1.12, Math.sin(angle(i)) * R_TOOLS))],
+    [],
+  );
+  const [scratch] = useState(() => new THREE.Vector3());
 
   useFrame((state, delta) => {
     const p = progress.get();
@@ -52,6 +62,14 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
     const r = 10.4;
     state.camera.position.set(Math.sin(az) * Math.cos(el) * r, Math.sin(el) * r + 0.4, Math.cos(az) * Math.cos(el) * r);
     state.camera.lookAt(0, 0.35, 0);
+    state.camera.updateMatrixWorld();
+
+    // Project the label anchors to the canvas and move the DOM labels there.
+    anchors.forEach((a, i) => {
+      const v = scratch.copy(a).project(state.camera);
+      const show = i === 0 ? win(p, 0, 0.08) > 0.5 : win(p, 0.06 + (i - 1) * 0.07, 0.14 + (i - 1) * 0.07) > 0.6;
+      labels.place(i, ((v.x + 1) / 2) * state.size.width, ((1 - v.y) / 2) * state.size.height, show);
+    });
 
     if (core.current) core.current.scale.y = Math.max(0.001, win(p, 0, 0.08));
 
@@ -112,9 +130,6 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
           <cylinderGeometry args={[0.3, 0.3, 0.03, 48]} />
         </mesh>
       </group>
-      <Html position={[0, 1.75, 0]} center className="pointer-events-none select-none">
-        <span className="whitespace-nowrap text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#702c40]">ReAct agent · LangGraph</span>
-      </Html>
 
       {/* Five tools */}
       {agentdbTools.map((tool, i) => {
@@ -131,21 +146,6 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
                 <boxGeometry args={[0.5, 0.035, 0.5]} />
               </mesh>
             </group>
-            <Html position={[0, 1.0, 0]} center zIndexRange={[20, 0]}>
-              <button
-                type="button"
-                onMouseEnter={() => onSelect(i)}
-                onMouseLeave={() => onSelect(null)}
-                onFocus={() => onSelect(i)}
-                onBlur={() => onSelect(null)}
-                onClick={() => onSelect(i)}
-                className={`whitespace-nowrap border px-2.5 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.14em] transition-colors ${
-                  selected === i ? "border-[#702c40] bg-[#702c40] text-[#f5efe6]" : "border-[#d9cfc3] bg-[#f5efe6]/90 text-[#542031]"
-                }`}
-              >
-                {String(i + 1).padStart(2, "0")} {tool.name}
-              </button>
-            </Html>
           </group>
         );
       })}
@@ -160,7 +160,7 @@ function Engine({ progress, selected, onSelect }: Omit<Props, "active">) {
         <sphereGeometry args={[0.06, 16, 12]} />
       </mesh>
 
-      <ContactShadows position={[0, 0.125, 0]} scale={6} blur={2.2} far={1.6} opacity={0.38} resolution={256} color="#542031" />
+      <ContactShadows position={[0, 0.125, 0]} scale={6} blur={2.2} far={1.6} opacity={0.38} resolution={256} color="#4d1025" />
     </group>
   );
 }
@@ -179,7 +179,7 @@ export default function AgentEngineScene({ active, ...props }: Props) {
       <directionalLight position={[-4, 7, 4]} intensity={1.8} color="#fff1e4" />
       <Environment resolution={64} frames={1}>
         <Lightformer form="rect" intensity={2} position={[0, 6, 2]} rotation-x={Math.PI / 2} scale={[10, 4, 1]} color="#fff6ec" />
-        <Lightformer form="rect" intensity={1} position={[-6, 2, 3]} rotation-y={Math.PI / 2} scale={[4, 6, 1]} color="#f5efe6" />
+        <Lightformer form="rect" intensity={1} position={[-6, 2, 3]} rotation-y={Math.PI / 2} scale={[4, 6, 1]} color="#f7f1e9" />
         <Lightformer form="rect" intensity={0.8} position={[6, 1, -2]} rotation-y={-Math.PI / 2} scale={[4, 6, 1]} color="#ede3d8" />
       </Environment>
       <Engine {...props} />

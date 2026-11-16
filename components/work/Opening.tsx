@@ -51,13 +51,13 @@ export function Opening() {
   };
 
   return (
-    <div ref={root} className="relative overflow-hidden bg-[#f5efe6] lg:h-[100svh]">
+    <div ref={root} className="relative overflow-hidden bg-[#f7f1e9] lg:h-[100svh]">
       {/* Background depth: an outlined numeral range */}
       <span
         aria-hidden
         data-o-depth
         className="pointer-events-none absolute -right-[2vw] top-[8%] select-none font-editorial leading-none text-transparent"
-        style={{ fontSize: "clamp(9rem, 30vw, 30rem)", WebkitTextStroke: "1px rgba(112,44,64,0.14)" }}
+        style={{ fontSize: "clamp(9rem, 30vw, 30rem)", WebkitTextStroke: "1px rgba(116,31,56,0.14)" }}
       >
         01–05
       </span>
@@ -65,14 +65,14 @@ export function Opening() {
       <div className="container-noir relative flex h-full flex-col justify-center gap-12 py-24 lg:py-0">
         <div data-o-title>
           <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-[#8a7f78]">Exhibition · Work</p>
-          <h2 className="mt-5 text-[#702c40]" aria-label="Selected work">
+          <h2 className="mt-5 text-[#741f38]" aria-label="Selected work">
             <span className="block overflow-hidden pb-[0.04em]">
               <span data-o-word="1" className="block font-editorial leading-[0.86] tracking-[-0.02em]" style={{ fontSize: "clamp(4rem, 11vw, 12rem)" }}>
                 Selected
               </span>
             </span>
             <span className="block overflow-hidden pl-[0.6em]">
-              <span data-o-word="2" className="block font-display font-extrabold leading-[0.9] tracking-[-0.05em] text-[#542031]" style={{ fontSize: "clamp(3.4rem, 8.6vw, 9.4rem)" }}>
+              <span data-o-word="2" className="block font-display font-extrabold leading-[0.9] tracking-[-0.05em] text-[#4d1025]" style={{ fontSize: "clamp(3.4rem, 8.6vw, 9.4rem)" }}>
                 Work<span className="text-gold">.</span>
               </span>
             </span>
@@ -83,15 +83,15 @@ export function Opening() {
         </div>
 
         {/* The line */}
-        <span aria-hidden data-o-line className="block h-px w-full origin-left bg-[#702c40]" />
+        <span aria-hidden data-o-line className="block h-px w-full origin-left bg-[#741f38]" />
 
         {/* Room index */}
         <ol data-o-index className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5">
           {work.map((p) => (
             <li key={p.id} data-o-item>
               <a href={`#work-${p.id}`} onClick={go(p.id)} className="group block">
-                <span className="block font-editorial text-3xl leading-none text-[#702c40]">{p.number}</span>
-                <span className="mt-2 block text-[0.95rem] font-semibold text-[#4c4140] transition-colors group-hover:text-[#702c40]">{p.name}</span>
+                <span className="block font-editorial text-3xl leading-none text-[#741f38]">{p.number}</span>
+                <span className="mt-2 block text-[0.95rem] font-semibold text-[#292322] transition-colors group-hover:text-[#741f38]">{p.name}</span>
                 <span className="block text-[0.8rem] text-[#8a7f78]">{p.tagline}</span>
               </a>
             </li>

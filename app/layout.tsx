@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono, Mrs_Saint_Delafield, Newsreader } from "next/font/google";
+import { Bodoni_Moda, Bricolage_Grotesque, Cormorant_Garamond, Instrument_Sans, JetBrains_Mono, Mrs_Saint_Delafield, Newsreader } from "next/font/google";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
 
@@ -33,6 +33,14 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+// Display face for the Ideas journal.
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
 const signature = Mrs_Saint_Delafield({
   subsets: ["latin"],
   weight: "400",
@@ -52,7 +60,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5efe6",
+  themeColor: "#f7f1e9",
   colorScheme: "light",
 };
 
@@ -60,7 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${bodoni.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable} ${signature.variable}`}
+      className={`${bricolage.variable} ${bodoni.variable} ${instrument.variable} ${newsreader.variable} ${jetbrains.variable} ${signature.variable} ${cormorant.variable}`}
     >
       <body>
         <SmoothScroll>{children}</SmoothScroll>

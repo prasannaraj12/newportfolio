@@ -9,7 +9,6 @@ import { Work } from "@/components/work/Work";
 import { Intelligence } from "@/components/sections/Intelligence";
 import { Recognition } from "@/components/sections/Recognition";
 import { Contact } from "@/components/sections/Contact";
-import { SculptureStage } from "@/components/stage/SculptureStage";
 
 export default function Home() {
   return (
@@ -18,10 +17,8 @@ export default function Home() {
       <ScrollProgress />
       <Cursor />
       <main>
-        <SculptureStage>
-          <Hero />
-          <Ideas />
-        </SculptureStage>
+        <Hero />
+        <Ideas />
         <Journey />
         <DoorsExperience />
         <Work />

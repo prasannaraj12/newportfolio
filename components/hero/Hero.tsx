@@ -1,239 +1,220 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { hero, portraits, profile, resumeUrl } from "@/lib/content";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { ArrowUpRight, Award, CodeXml, Layers, Trophy } from "lucide-react";
+import { achievements, archive, hero, portraits, profile, resumeUrl } from "@/lib/content";
+import { work } from "@/lib/work";
 import { MagneticLink } from "@/components/ui/MagneticLink";
-import { useStage } from "@/components/stage/SculptureStage";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+// Every figure is counted from the content files, never typed in.
+const projectCount = work.length + archive.filter((p) => p.id !== "trust-cv" && p.id !== "satquery").length;
+const hackathonCount = achievements.hackathons.length;
+const metrics = [
+  { icon: Layers, value: projectCount >= 10 ? "10+" : String(projectCount), label: "Projects" },
+  { icon: Trophy, value: hackathonCount > 3 ? "3+" : String(hackathonCount), label: "Hackathons" },
+  { icon: Award, value: String(achievements.certifications.length), label: "Certifications" },
+];
+
+/* ── The portrait card: two rounded quadrilaterals drawn in one SVG ── */
+type Pt = [number, number];
+
+/** A closed path through `pts` with every corner rounded by `r`. */
+function roundedQuad(pts: Pt[], r: number) {
+  const n = pts.length;
+  const toward = (a: Pt, b: Pt, d: number): Pt => {
+    const dx = b[0] - a[0];
+    const dy = b[1] - a[1];
+    const len = Math.hypot(dx, dy);
+    return [a[0] + (dx / len) * d, a[1] + (dy / len) * d];
+  };
+  let d = "";
+  for (let i = 0; i < n; i++) {
+    const prev = pts[(i - 1 + n) % n];
+    const cur = pts[i];
+    const next = pts[(i + 1) % n];
+    const a = toward(cur, prev, r);
+    const b = toward(cur, next, r);
+    d += `${i === 0 ? "M" : "L"}${a[0].toFixed(1)},${a[1].toFixed(1)} Q${cur[0]},${cur[1]} ${b[0].toFixed(1)},${b[1].toFixed(1)} `;
+  }
+  return `${d}Z`;
+}
+
+const VB = { w: 680, h: 720 };
+// Front card leans: its left edge slants and its top edge rises to the right.
+const FRONT: Pt[] = [[196, 90], [668, 8], [668, 640], [76, 702]];
+const BACK: Pt[] = [[60, 152], [430, 30], [588, 714], [72, 714]];
+const FRONT_D = roundedQuad(FRONT, 50);
+const BACK_D = roundedQuad(BACK, 46);
 
 /**
- * Editorial cover. Left: identity, introduction and a layered headline.
- * Right: the studio photograph on three depth planes (rose ground, photo,
- * gold hairline frame) that move at different rates; scrolling locks the
- * frame onto the photograph, and the whole object tilts toward the pointer.
- * The Intelligence Prism sits in the gutter between headline and photograph.
+ * The cover. Left: name, role, a two-line serif headline, the way in and
+ * the record. Right: the portrait on a leaning card over a burgundy plane,
+ * with a small glass caption and a vertical signature line.
  */
 export function Hero() {
   const section = useRef<HTMLElement>(null);
-  const stage = useStage();
-  const [curtain, setCurtain] = useState(true);
+  const reduced = useReducedMotion();
 
-  // Pointer parallax — each plane moves at its own depth.
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 60, damping: 18 });
-  const sy = useSpring(my, { stiffness: 60, damping: 18 });
-  const groundX = useTransform(sx, (v) => v * -16);
-  const groundY = useTransform(sy, (v) => v * -12);
-  const photoX = useTransform(sx, (v) => v * -5);
-  const photoY = useTransform(sy, (v) => v * -4);
-  const frameX = useTransform(sx, (v) => v * 10);
-  const frameY = useTransform(sy, (v) => v * 8);
-  const typeX = useTransform(sx, (v) => v * 6);
-  // the whole photographic object tilts a few degrees toward the pointer
-  const tiltX = useTransform(sy, (v) => v * -4);
-  const tiltY = useTransform(sx, (v) => v * 5);
+  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end start"] });
+  const backY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const cardY = useTransform(scrollYProgress, [0, 1], [0, -24]);
 
-  useEffect(() => {
-    const onMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      mx.set((e.clientX / window.innerWidth) * 2 - 1);
-      my.set((e.clientY / window.innerHeight) * 2 - 1);
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [mx, my]);
 
-  useGSAP(
-    () => {
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const driver = stage?.driver;
-
-      if (reduced) {
-        setCurtain(false);
-        if (driver) gsap.set(driver, { intro: 1 });
-      } else {
-        const tl = gsap.timeline();
-        tl.from("[data-card-line]", { yPercent: 110, duration: 0.9, ease: "expo.out" }, 0.1)
-          .to("[data-curtain]", { clipPath: "inset(0% 0% 100% 0%)", duration: 1.1, ease: "expo.inOut" }, 0.9)
-          .add(() => setCurtain(false))
-          // photograph: ground slides in, photo is uncovered, frame draws on
-          .from("[data-ground]", { xPercent: -14, opacity: 0, duration: 1.4, ease: "expo.out" }, 1.15)
-          .fromTo("[data-photo]", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut" }, 1.25)
-          .from("[data-photo-img]", { scale: 1.08, duration: 2, ease: "expo.out" }, 1.25)
-          .from("[data-frame]", { opacity: 0, scale: 1.06, duration: 1.4, ease: "expo.out" }, 1.75)
-          .from("[data-mark]", { opacity: 0, duration: 0.6, stagger: 0.05 }, 2.1)
-          // typography: the serif rises, the rule draws, the sans slides under it
-          .from("[data-lead]", { yPercent: 105, duration: 1, ease: "expo.out" }, 1.35)
-          .from("[data-ideas]", { yPercent: 100, duration: 1.4, ease: "expo.out" }, 1.45)
-          .from("[data-rule]", { scaleX: 0, transformOrigin: "left", duration: 0.9, ease: "expo.inOut" }, 1.85)
-          .from("[data-into]", { opacity: 0, x: -10, duration: 0.7 }, 2.05)
-          .from("[data-intel]", { yPercent: 100, duration: 1.3, ease: "expo.out" }, 1.95)
-          .from("[data-fade]", { y: 14, opacity: 0, duration: 0.9, stagger: 0.06, ease: "power3.out" }, 2.1)
-          // the signature is written left to right
-          .fromTo("[data-sign]", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "power2.inOut" }, 2.6);
-        if (driver) tl.to(driver, { intro: 1, duration: 2.6, ease: "power3.out" }, 1.6);
-      }
-
-      // Scroll: the gold frame locks onto the photograph; sculpture travels on.
-      const st = { trigger: section.current, start: "top top", end: "bottom top", scrub: true };
-      gsap.fromTo("[data-frame-lock]", { xPercent: 5, yPercent: -4 }, { xPercent: 0, yPercent: 0, ease: "none", scrollTrigger: st });
-      gsap.fromTo("[data-ground-lock]", { xPercent: -9, yPercent: 7 }, { xPercent: -15, yPercent: 11, ease: "none", scrollTrigger: st });
-      gsap.to("[data-copy]", { yPercent: -10, opacity: 0.2, ease: "none", scrollTrigger: { ...st, end: "75% top" } });
-      if (driver) {
-        ScrollTrigger.create({ ...st, onUpdate: (self) => gsap.set(driver, { travel: self.progress }) });
-      }
-    },
-    { scope: section },
-  );
+  const rise = (delay: number) =>
+    reduced ? {} : { initial: { opacity: 0, y: 22 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1, ease, delay } };
+  const line = (delay: number) =>
+    reduced ? {} : { initial: { y: "105%" }, animate: { y: "0%" }, transition: { duration: 1.2, ease, delay } };
 
   return (
-    <section ref={section} id="top" aria-label="Introduction" className="theme-ivory relative overflow-hidden lg:h-[100svh] lg:min-h-[760px]">
-      {curtain && (
-        <div data-curtain className="fixed inset-0 z-[70] flex items-center justify-center bg-burgundy text-ivory" style={{ clipPath: "inset(0% 0% 0% 0%)" }}>
-          <p className="overflow-hidden text-center font-editorial text-[clamp(1.8rem,4.4vw,3.4rem)] leading-none">
-            <span data-card-line className="block">Prasanna Raj R.</span>
-          </p>
-        </div>
-      )}
-
-      <div className="container-noir relative grid min-h-[100svh] gap-x-8 pb-10 pt-24 lg:h-full lg:min-h-0 lg:grid-cols-12 lg:pt-28">
-        {/* ───── Left column ───── */}
-        <div data-copy className="relative z-10 flex flex-col lg:col-span-7">
-          <div data-fade className="flex items-center gap-3 whitespace-nowrap text-[0.62rem] font-medium uppercase tracking-[0.14em] text-titanium-400 sm:gap-4 sm:text-[0.7rem] sm:tracking-[0.22em]">
-            <span>Portfolio · 2026</span>
-            <span className="h-px w-6 bg-line sm:w-10" />
-            <span>{profile.location.split(",")[0]}, India</span>
-          </div>
-
-          <div data-fade className="mt-9">
-            <p className="font-display text-[1.5rem] font-bold leading-none tracking-[-0.02em] text-burgundy">{profile.name}.</p>
-            <p className="mt-2 text-[0.95rem] font-medium text-espresso">{hero.role}.</p>
-          </div>
-
-          <div className="mt-8 max-w-[29rem]">
-            <p data-fade className="text-[1.02rem] font-semibold leading-snug text-espresso">{hero.tagline}</p>
-            <p data-fade className="mt-3 font-serif text-[1.22rem] leading-[1.4] text-titanium-300">
-              {hero.intro}
+    <section
+      ref={section}
+      id="top"
+      aria-label="Introduction"
+      className="theme-ivory relative overflow-hidden bg-[radial-gradient(55%_60%_at_74%_82%,rgba(183,123,133,0.16),transparent_70%),linear-gradient(180deg,#fbf5f1,#f7f1e9)] lg:min-h-[100svh]"
+    >
+      <div className="container-wide grid gap-x-8 gap-y-16 pb-16 pt-32 lg:min-h-[100svh] lg:grid-cols-12 lg:items-center lg:pb-14 lg:pt-28">
+        {/* ───── Introduction ───── */}
+        <div className="relative z-10 min-w-0 lg:col-span-6">
+          <motion.div {...rise(0.15)}>
+            <p className="flex items-center gap-5">
+              <span className="text-[0.85rem] font-semibold uppercase tracking-[0.38em] text-burgundy sm:text-[1rem] sm:tracking-[0.45em]">{profile.name}.</span>
+              <span aria-hidden className="h-px w-16 bg-burgundy/60 sm:w-24" />
             </p>
-          </div>
+            <p className="mt-4 text-[1.08rem] text-espresso/80">{hero.role}</p>
+          </motion.div>
 
-          <div data-fade className="mt-8 flex flex-wrap items-center gap-3">
-            <MagneticLink href="#laboratory" variant="primary" className="rounded-none px-6">
-              Selected work <ArrowDownRight className="size-4" />
-            </MagneticLink>
-            <MagneticLink href={resumeUrl} external className="rounded-none px-6">
-              Résumé <ArrowUpRight className="size-4" />
-            </MagneticLink>
-          </div>
-
-          {/* Layered headline */}
-          <motion.h1 style={{ x: typeX }} className="relative mt-14 text-burgundy lg:mt-auto">
-            <span className="sr-only">
-              {profile.name}, {hero.role}. {hero.headline}
+          <h1 className="mt-10 font-serif font-semibold leading-[1.08] tracking-[-0.025em] text-espresso lg:mt-14" style={{ fontSize: "clamp(2.45rem, 4.15vw, 4.8rem)" }}>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="block lg:whitespace-nowrap" {...line(0.3)}>
+                Building Intelligent,
+              </motion.span>
             </span>
-            <span aria-hidden className="block overflow-hidden">
-              <span data-lead className="block font-display text-[clamp(1.25rem,2vw,1.9rem)] font-medium leading-none tracking-[-0.02em] text-espresso">
-                I turn ambitious
-              </span>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="block lg:whitespace-nowrap" {...line(0.42)}>
+                <span className="text-burgundy">Real-World AI</span> Solutions.
+              </motion.span>
             </span>
-            <span aria-hidden className="mt-1 flex items-end gap-5">
-              <span className="block overflow-hidden pb-[0.06em]">
-                <span data-ideas className="block font-editorial leading-[0.82] tracking-[-0.025em]" style={{ fontSize: "clamp(4.6rem, 11.6vw, 12.8rem)" }}>
-                  ideas
-                </span>
-              </span>
-              <span className="mb-[1.6vw] flex items-center gap-3">
-                <span data-rule className="block h-px w-[clamp(2.5rem,5vw,5rem)] bg-gold" />
-                <span data-into className="text-[clamp(0.75rem,1vw,0.95rem)] font-medium uppercase tracking-[0.42em] text-espresso">into</span>
-              </span>
-            </span>
-            <span aria-hidden className="-mt-[0.28em] block overflow-hidden pb-[0.08em] pl-[0.6em]" style={{ fontSize: "clamp(2.2rem, 4.3vw, 4.9rem)" }}>
-              <span data-intel className="block font-display font-extrabold leading-[0.98] tracking-[-0.05em] text-espresso">
-                intelligent systems<span className="text-gold">.</span>
-              </span>
-            </span>
-          </motion.h1>
-        </div>
+          </h1>
 
-        {/* ───── Right column: the photograph on three planes ───── */}
-        <div className="relative mt-16 flex items-start justify-end lg:col-span-5 lg:mt-0 lg:items-center">
-          <motion.figure style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1100 }} className="relative w-[min(400px,82vw)]">
-            {/* plane 1 — dusty-rose ground */}
-            <motion.div style={{ x: groundX, y: groundY }} className="absolute inset-0" aria-hidden>
-              <div data-ground-lock className="absolute inset-0">
-                <div data-ground className="h-full w-full bg-rose-deep/80" />
-              </div>
-            </motion.div>
+          <motion.p {...rise(0.65)} className="mt-8 max-w-[38rem] text-[1.08rem] leading-[1.55] text-titanium-300 sm:text-[1.18rem]">
+            {hero.intro}
+          </motion.p>
 
-            {/* plane 2 — the photograph (native 400 × 451) */}
-            <motion.div style={{ x: photoX, y: photoY }} className="relative">
-              <div data-photo className="relative aspect-[400/451] w-full overflow-hidden bg-espresso">
-                <div data-photo-img className="absolute inset-0">
-                  <Image
-                    src={portraits.hero.src}
-                    alt={`${profile.name}, ${hero.role}`}
-                    fill
-                    priority
-                    sizes="(max-width: 1023px) 82vw, 400px"
-                    className="object-cover"
-                    style={{ objectPosition: portraits.hero.position }}
-                  />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* plane 3 — gold hairline frame; scrolling locks it onto the photo */}
-            <motion.div style={{ x: frameX, y: frameY }} className="pointer-events-none absolute inset-0" aria-hidden>
-              <div data-frame-lock className="absolute inset-0">
-                <div data-frame className="absolute inset-0 border border-gold" />
-              </div>
-            </motion.div>
-
-            {/* registration marks */}
-            {[
-              "-left-4 -top-4 border-l border-t",
-              "-right-4 -top-4 border-r border-t",
-              "-bottom-4 -left-4 border-b border-l",
-              "-bottom-4 -right-4 border-b border-r",
-            ].map((c) => (
-              <span key={c} data-mark aria-hidden className={`absolute size-3 border-espresso/50 ${c}`} />
-            ))}
-
-            <figcaption className="mt-6 flex items-end justify-between gap-4 text-[0.75rem] text-espresso">
-              <span data-fade>
-                Fig. 1 — In the studio, Bengaluru
-              </span>
-              {/* signature, written on after the intro */}
-              <span aria-hidden data-sign className="-mb-2 -rotate-6 font-signature text-[clamp(2.8rem,4.4vw,3.8rem)] leading-none text-burgundy">
-                Prasanna
-              </span>
-            </figcaption>
-
-            <span
-              aria-hidden
-              data-fade
-              className="absolute -right-10 top-0 hidden h-[451px] max-h-full rotate-180 items-center whitespace-nowrap text-[0.65rem] font-medium uppercase tracking-[0.3em] text-titanium-500 [writing-mode:vertical-rl] xl:flex"
+          <motion.div {...rise(0.78)} className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6">
+            <MagneticLink
+              href="#laboratory"
+              variant="primary"
+              className="h-14 !rounded-md px-9 text-[1rem] font-semibold shadow-[0_16px_28px_-18px_rgba(77,16,37,0.8)] hover:shadow-[0_22px_34px_-18px_rgba(77,16,37,0.85)] sm:px-11"
             >
-              Prasanna Raj R. — Portrait
-            </span>
-          </motion.figure>
+              View Selected Work <ArrowUpRight className="size-[18px]" />
+            </MagneticLink>
+            <MagneticLink
+              href={resumeUrl}
+              external
+              className="h-14 !rounded-md border-2 !border-burgundy px-9 text-[1rem] font-semibold !text-[#4d1025] hover:bg-burgundy/5 sm:px-11"
+            >
+              Résumé <ArrowUpRight className="size-[18px]" />
+            </MagneticLink>
+          </motion.div>
+
+          {/* The record */}
+          <motion.ul {...rise(0.92)} aria-label="Record" className="mt-14 grid grid-cols-3 sm:flex sm:items-stretch lg:mt-20">
+            {metrics.map(({ icon: Icon, value, label }, i) => (
+              <li key={label} className={`flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-5 ${i > 0 ? "border-l border-line pl-4 sm:ml-12 sm:pl-12" : ""}`}>
+                <Icon aria-hidden className="size-7 shrink-0 stroke-[1.3] text-burgundy sm:size-10" />
+                <span>
+                  <span className="block font-display text-[1.35rem] font-bold leading-none tracking-[-0.02em] text-burgundy sm:text-[1.7rem]">{value}</span>
+                  <span className="mt-1.5 block text-[0.82rem] text-espresso/80 sm:text-[1.02rem]">{label}</span>
+                </span>
+              </li>
+            ))}
+          </motion.ul>
         </div>
 
-        {/* Click target over the sculpture (gutter between headline and photo) */}
-        <button
-          type="button"
-          onClick={() => stage?.scatter()}
-          aria-label="Replay the prism: watch the idea refract again"
-          className="group absolute bottom-[8%] left-[57%] z-10 hidden h-[26%] w-[8%] items-end justify-center xl:flex"
-        >
-          <span data-fade className="translate-y-5 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-titanium-500 transition-colors group-hover:text-burgundy">
-            Idea → Intelligence
-          </span>
-        </button>
+        {/* ───── Portrait card ───── */}
+        <div className="relative min-w-0 lg:col-span-6">
+          <div className="relative mx-auto w-full max-w-[34rem] lg:ml-[7%] lg:mr-0 lg:w-[min(85%,42rem,calc((100svh-9rem)*0.944))] lg:max-w-none">
+            <motion.svg
+              viewBox={`0 0 ${VB.w} ${VB.h}`}
+              role="img"
+              aria-label={`${profile.name}, ${hero.role}`}
+              className="relative block h-auto w-full overflow-visible"
+              {...(reduced ? {} : { initial: { opacity: 0, scale: 0.97 }, animate: { opacity: 1, scale: 1 }, transition: { duration: 1.5, ease, delay: 0.3 } })}
+            >
+              <defs>
+                <linearGradient id="hero-back" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#8a2a47" />
+                  <stop offset="1" stopColor="#4d1025" />
+                </linearGradient>
+                <linearGradient id="hero-rim" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#ffffff" stopOpacity="0.75" />
+                  <stop offset="1" stopColor="#e8c9c9" stopOpacity="0.35" />
+                </linearGradient>
+                <clipPath id="hero-front">
+                  <path d={FRONT_D} />
+                </clipPath>
+                <filter id="hero-shadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="26" stdDeviation="26" floodColor="#4d1025" floodOpacity="0.32" />
+                </filter>
+              </defs>
+
+              {/* burgundy plane behind */}
+              <motion.path d={BACK_D} fill="url(#hero-back)" filter="url(#hero-shadow)" style={{ y: backY }} />
+
+              {/* the photograph on the leaning card */}
+              <motion.g style={{ y: cardY }} filter="url(#hero-shadow)">
+                <path d={FRONT_D} fill="#2a1a1c" />
+                <image
+                  href={portraits.hero.src}
+                  x={FRONT[3][0]}
+                  y={FRONT[1][1]}
+                  width={FRONT[1][0] - FRONT[3][0]}
+                  height={FRONT[3][1] - FRONT[1][1]}
+                  preserveAspectRatio="xMidYMin slice"
+                  clipPath="url(#hero-front)"
+                />
+                {/* warm light from the upper right */}
+                <path d={FRONT_D} fill="url(#hero-warm)" opacity="0.5" />
+                <path d={FRONT_D} fill="none" stroke="url(#hero-rim)" strokeWidth="2.5" />
+              </motion.g>
+              <defs>
+                <radialGradient id="hero-warm" cx="0.8" cy="0.15" r="0.7">
+                  <stop offset="0" stopColor="#f3d7c4" stopOpacity="0.35" />
+                  <stop offset="1" stopColor="#f3d7c4" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+            </motion.svg>
+
+            {/* glass caption */}
+            <motion.div
+              {...(reduced ? {} : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1, ease, delay: 1.1 } })}
+              className="absolute left-[0.5%] top-[68.5%] w-[37%] min-w-[12.5rem] rounded-xl border border-white/30 bg-[rgba(124,52,72,0.55)] px-[5%] py-[4%] text-white shadow-[0_20px_40px_-24px_rgba(41,35,34,0.6)] backdrop-blur-md"
+            >
+              <CodeXml aria-hidden className="size-6 stroke-[1.6] sm:size-8" />
+              <p className="mt-2 font-display text-[1rem] font-semibold leading-tight sm:text-[1.3rem]">AI Systems</p>
+              <p className="mt-1 whitespace-nowrap text-[0.72rem] text-white/85 sm:text-[0.86rem]">
+                Build <span className="mx-1">·</span> Train <span className="mx-1">·</span> Deploy
+              </p>
+            </motion.div>
+          </div>
+
+          {/* vertical signature line */}
+          <motion.div
+            aria-hidden
+            {...rise(1.2)}
+            className="absolute right-0 bottom-[12%] top-[14%] hidden flex-col items-center gap-4 lg:flex"
+          >
+            <span className="size-1.5 rounded-full bg-burgundy" />
+            <span className="w-px flex-1 bg-espresso/60" />
+            <span className="whitespace-nowrap text-[0.68rem] font-medium uppercase tracking-[0.24em] text-espresso/80 [writing-mode:vertical-rl] rotate-180">
+              {hero.role} · {profile.name}.
+            </span>
+            <span className="w-px flex-1 bg-espresso/60" />
+          </motion.div>
+        </div>
       </div>
     </section>
   );

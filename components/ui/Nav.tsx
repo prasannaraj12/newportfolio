@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { nav, resumeUrl } from "@/lib/content";
 import { useLenis } from "@/components/providers/SmoothScroll";
+import { ArrowUpRight, MapPin } from "lucide-react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -17,6 +18,15 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState<string | null>(null);
   const [onBurgundy, setOnBurgundy] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Once the page moves, the bar gains a quiet paper background and a rule.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Switch to ivory ink while a burgundy room sits under the header.
   useEffect(() => {
@@ -68,59 +78,77 @@ export function Nav() {
     else document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const currentLabel = nav.find((n) => n.id === current)?.label;
-
+  
   return (
     <>
-      <header className={`pointer-events-none fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${onBurgundy ? "text-ivory" : "text-burgundy"}`}>
-        <div className="container-noir flex items-start justify-between gap-6 pt-5">
-          <a href="#top" onClick={go("top")} className="pointer-events-auto flex items-baseline gap-3">
-            <span className="font-display text-[1.05rem] font-bold tracking-[-0.02em]">PR.</span>
-            <span className="relative hidden h-5 min-w-[9rem] overflow-hidden text-[0.85rem] sm:block">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={currentLabel ?? "home"}
-                  initial={{ y: "100%" }}
-                  animate={{ y: "0%" }}
-                  exit={{ y: "-100%" }}
-                  transition={{ duration: 0.45, ease }}
-                  className="absolute left-0 top-0 whitespace-nowrap opacity-70"
-                >
-                  {currentLabel ? `— ${currentLabel}` : "— Portfolio, 2026"}
-                </motion.span>
-              </AnimatePresence>
+      <motion.header
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease, delay: 0.05 }}
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,color] duration-500 ${
+          onBurgundy ? "text-ivory" : "text-burgundy"
+        } ${
+          scrolled && !open
+            ? onBurgundy
+              ? "border-ivory/15 bg-burgundy/95"
+              : "border-line bg-ivory/95"
+            : "border-transparent bg-transparent"
+        }`}
+      >
+        <div className="container-wide flex items-center justify-between gap-6 py-4 lg:py-5">
+          <div className="flex items-center gap-5">
+            <a href="#top" onClick={go("top")} className="flex items-baseline gap-3">
+              <span className="font-serif text-[1.55rem] font-bold leading-none tracking-[-0.03em]">PR.</span>
+              <span className={`hidden text-[0.85rem] sm:inline ${onBurgundy ? "text-ivory/70" : "text-titanium-400"}`}>— Portfolio 2026</span>
+            </a>
+            <span aria-hidden className={`hidden h-7 w-px md:block ${onBurgundy ? "bg-ivory/25" : "bg-line"}`} />
+            <span className={`hidden items-center gap-2 text-[0.85rem] md:flex ${onBurgundy ? "text-ivory/80" : "text-espresso/80"}`}>
+              <MapPin aria-hidden className="size-4 stroke-[1.5]" />
+              Bengaluru, India
             </span>
-          </a>
+          </div>
 
-          <nav aria-label="Primary" className="pointer-events-auto hidden lg:block">
-            <ul className="flex items-center gap-7 text-[0.9rem]">
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-8 text-[0.9rem] font-medium xl:gap-10">
               {nav.map((n) => (
                 <li key={n.id}>
                   <a
                     href={`#${n.id}`}
                     onClick={go(n.id)}
-                    className={`relative transition-opacity duration-300 ${current === n.id ? "opacity-100" : "opacity-60 hover:opacity-100"}`}
+                    aria-current={current === n.id ? "location" : undefined}
+                    className={`group relative py-2 transition-colors duration-300 ${
+                      current === n.id ? (onBurgundy ? "text-ivory" : "text-burgundy") : onBurgundy ? "text-ivory/75 hover:text-ivory" : "text-espresso/85 hover:text-burgundy"
+                    }`}
                   >
                     {n.label}
+                    {/* hover rule draws from the left */}
+                    <span aria-hidden className="absolute -bottom-1 left-0 right-0 h-[2px] origin-left scale-x-0 bg-current opacity-40 transition-transform duration-500 ease-[var(--ease-cinematic)] group-hover:scale-x-100" />
                     {current === n.id && (
-                      <motion.span layoutId="nav-mark" className="absolute -bottom-1.5 left-0 right-0 h-px bg-current" transition={{ duration: 0.5, ease }} />
+                      <motion.span layoutId="nav-mark" className="absolute -bottom-1 left-0 right-0 h-[2px] bg-current" transition={{ duration: 0.5, ease }} />
                     )}
                   </a>
                 </li>
               ))}
-              <li>
-                <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="opacity-60 transition-opacity hover:opacity-100">
-                  Résumé ↗
+              <li className="ml-2">
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex h-11 items-center gap-2 rounded-md px-6 font-semibold shadow-[0_10px_20px_-14px_rgba(77,16,37,0.8)] transition-[background-color,translate] duration-300 hover:-translate-y-0.5 ${
+                    onBurgundy ? "bg-ivory text-burgundy" : "bg-burgundy text-ivory hover:bg-[#4d1025]"
+                  }`}
+                >
+                  Résumé <ArrowUpRight aria-hidden className="size-4" />
                 </a>
               </li>
             </ul>
           </nav>
 
-          <button type="button" className="pointer-events-auto text-[0.9rem] lg:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+          <button type="button" className="text-[0.9rem] font-medium lg:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
             {open ? "Close" : "Menu"}
           </button>
         </div>
-      </header>
+      </motion.header>
 
       <AnimatePresence>
         {open && (

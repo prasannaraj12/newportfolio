@@ -1,100 +1,116 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
-import { perspective } from "@/lib/content";
-import { useStage } from "@/components/stage/SculptureStage";
+import { motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
+import { useLenis } from "@/components/providers/SmoothScroll";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const HEADLINES = [
+  { lead: "Agents", rest: "That Reason.", indent: "lg:pl-0" },
+  { lead: "Models", rest: "That Adapt.", indent: "lg:pl-[16%]" },
+  { lead: "Pipelines", rest: "That Keep Watch.", indent: "lg:pl-[6%]" },
+];
 
 /**
- * 01 — Ideas into intelligence.
- * The prism arrives from the hero; scrolling refracts the idea into five
- * rays that are tied into one structure while the sentence assembles.
+ * 01 — Ideas. Only type: a masthead, the heading, one line, three
+ * standalone headlines and a closing statement.
  */
 export function Ideas() {
-  const root = useRef<HTMLElement>(null);
-  const pin = useRef<HTMLDivElement>(null);
-  const stage = useStage();
+  const lenis = useLenis();
+  const reduced = useReducedMotion();
 
-  useGSAP(
-    () => {
-      const driver = stage?.driver;
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduced) {
-        if (driver) gsap.set(driver, { order: 1 });
-        return;
-      }
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: { trigger: pin.current, start: "top top", end: "+=230%", pin: true, scrub: 0.8 },
-      });
-      if (driver) tl.fromTo(driver, { order: 0.5 }, { order: 1, duration: 2.2, ease: "power1.inOut" }, 0.2);
+  const toWork = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (lenis) lenis.scrollTo("#laboratory", { duration: 1.8 });
+    else document.getElementById("laboratory")?.scrollIntoView({ behavior: "smooth" });
+  };
 
-      tl.from("[data-w-ideas]", { xPercent: -20, opacity: 0, duration: 0.5 }, 0)
-        .from("[data-w-into]", { opacity: 0, y: 30, duration: 0.4 }, 0.7)
-        .from("[data-w-intel]", { xPercent: 18, opacity: 0, duration: 0.6 }, 1.6)
-        .to("[data-w-ideas]", { opacity: 0.18, duration: 0.6 }, 1.7);
-
-      gsap.utils.toArray<HTMLElement>("[data-caption]").forEach((el, i) => {
-        tl.from(el, { opacity: 0, y: 24, duration: 0.35 }, 0.5 + i * 0.6);
-      });
-
-      // Hand over to the graphite chapter that follows.
-      tl.to("[data-dusk]", { opacity: 1, duration: 0.5 }, 2.6).to("[data-ideas-text]", { opacity: 0, duration: 0.4 }, 2.65);
-    },
-    { scope: root },
-  );
+  // Lines are masked; the block (not the hidden line) watches the viewport.
+  const watch = reduced ? {} : { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.5 } };
+  const line = (i: number) =>
+    reduced ? {} : { variants: { hidden: { y: "105%" }, show: { y: "0%", transition: { duration: 1.3, ease, delay: i * 0.12 } } } };
+  const fade = (delay: number) =>
+    reduced ? {} : { variants: { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 1, ease, delay } } } };
+  const rule = reduced ? {} : { variants: { hidden: { scaleX: 0 }, show: { scaleX: 1, transition: { duration: 1.4, ease } } } };
 
   return (
-    <section ref={root} id="ideas" aria-label="Ideas into intelligence" className="theme-ivory relative">
-      <div ref={pin} className="relative z-10 h-[100svh] overflow-hidden">
-        <div data-dusk aria-hidden className="absolute inset-0 bg-rose opacity-0" />
+    <section id="ideas" aria-label="Ideas" className="theme-ivory relative overflow-hidden">
+      <div className="container-wide">
+        {/* Masthead */}
+        <motion.div {...watch} className="pt-28 md:pt-36">
+          <div className="flex items-baseline justify-between text-[0.72rem] uppercase tracking-[0.24em] text-titanium-400">
+            <span className="font-serif text-[1.2rem] font-bold normal-case tracking-[-0.02em] text-burgundy">PR.</span>
+            <span>Ideas — 2026</span>
+          </div>
+          <motion.span aria-hidden {...rule} className="mt-4 block h-px origin-left bg-line" />
+        </motion.div>
 
-        <div data-ideas-text className="container-noir relative z-10 h-full">
-          <h2 className="sr-only">Ideas into intelligence</h2>
+        {/* Introduction */}
+        <motion.div {...watch} className="pb-32 pt-20 md:pb-48 md:pt-28">
+          <motion.p {...fade(0)} className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-burgundy">
+            Research · Experiments · Innovation
+          </motion.p>
+          <h2 className="mt-8 font-journal font-medium leading-[0.92] tracking-[-0.02em] text-espresso" style={{ fontSize: "clamp(3.4rem, 8.6vw, 9.8rem)" }}>
+            <span className="block overflow-hidden pb-[0.08em]">
+              <motion.span className="block" {...line(0)}>
+                Where Ideas
+              </motion.span>
+            </span>
+            <span className="block overflow-hidden pb-[0.08em] lg:pl-[1.1em]">
+              <motion.span className="block" {...line(1)}>
+                Become <span className="text-burgundy">Intelligence.</span>
+              </motion.span>
+            </span>
+          </h2>
+          <motion.p {...fade(0.4)} className="mt-10 max-w-xl text-[1.1rem] leading-relaxed text-titanium-400">
+            Exploring intelligent systems, adaptive models and autonomous AI.
+          </motion.p>
+        </motion.div>
 
-          <p
-            data-w-ideas
-            aria-hidden
-            className="absolute left-[var(--gutter)] top-[13%] font-display font-extralight leading-none tracking-[-0.06em] text-titanium-50"
-            style={{ fontSize: "clamp(4rem, 15vw, 16rem)" }}
-          >
-            Ideas
-          </p>
-          <p
-            data-w-into
-            aria-hidden
-            className="absolute left-[34%] top-[44%] font-serif text-titanium-400"
-            style={{ fontSize: "clamp(1.6rem, 3vw, 2.8rem)" }}
-          >
-            into
-          </p>
-          <p
-            data-w-intel
-            aria-hidden
-            className="absolute bottom-[10%] right-[var(--gutter)] font-display font-extrabold leading-none tracking-[-0.055em] text-titanium-50"
-            style={{ fontSize: "clamp(2.6rem, 9vw, 10rem)" }}
-          >
-            intelligence<span className="text-gold">.</span>
-          </p>
+        {/* The three headlines — the centrepiece */}
+        <ul className="border-t border-line">
+          {HEADLINES.map((h) => (
+            <motion.li key={h.lead} {...watch} className="group border-b border-line">
+              <p
+                className={`overflow-hidden py-10 font-journal font-medium leading-[1.02] tracking-[-0.02em] text-espresso md:py-14 ${h.indent}`}
+                style={{ fontSize: "clamp(2.9rem, 7.4vw, 8.4rem)" }}
+              >
+                <motion.span className="block" {...line(0)}>
+                  <span className="inline-block transition-transform duration-700 ease-[var(--ease-cinematic)] group-hover:translate-x-3">
+                    <span className="text-burgundy">{h.lead}</span> {h.rest}
+                  </span>
+                </motion.span>
+              </p>
+            </motion.li>
+          ))}
+        </ul>
 
-          <ol className="absolute bottom-[11%] left-[var(--gutter)] hidden max-w-[19rem] space-y-5 md:block">
-            {perspective.map((s) => (
-              <li key={s.lead} data-caption>
-                <p className="font-serif text-[1.15rem] leading-snug text-titanium-100">
-                  {s.lead} {s.rest}
-                </p>
-                <p className="mt-1 text-[0.72rem] text-titanium-500">{s.ref}</p>
-              </li>
-            ))}
-          </ol>
-
-          <button
-            type="button"
-            onClick={() => stage?.scatter()}
-            className="absolute left-1/2 top-[50%] h-[36%] w-[26%] -translate-x-1/2 -translate-y-1/2"
-            aria-label="Replay the prism: watch the idea refract again"
-          />
-        </div>
+        {/* Closing */}
+        <motion.div {...watch} className="grid gap-12 py-32 md:py-48 lg:grid-cols-12 lg:items-end">
+          <h2 className="font-journal font-medium leading-[1] tracking-[-0.015em] text-espresso lg:col-span-8" style={{ fontSize: "clamp(2.6rem, 5.6vw, 6rem)" }}>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="block" {...line(0)}>
+                Curiosity builds.
+              </motion.span>
+            </span>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="block text-burgundy" {...line(1)}>
+                Intelligence follows.
+              </motion.span>
+            </span>
+          </h2>
+          <motion.div {...fade(0.4)} className="lg:col-span-4 lg:pb-3 lg:text-right">
+            <a
+              href="#laboratory"
+              onClick={toWork}
+              className="group inline-flex items-center gap-3 border-b border-burgundy/40 pb-2 font-journal text-[1.7rem] font-medium text-burgundy transition-colors hover:border-burgundy"
+            >
+              Explore My Work
+              <ArrowUpRight aria-hidden className="size-5 transition-transform duration-500 ease-[var(--ease-cinematic)] group-hover:-translate-y-1 group-hover:translate-x-1" />
+            </a>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

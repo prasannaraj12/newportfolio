@@ -22,6 +22,8 @@ const jobs = [
   // Hero (editorial frame): portrait-orientation slice centred on the face,
   // displayed at native size (400×451) — never upscaled.
   { file: "04-studio-portrait.jpg", out: "hero-tall", box: { left: 242, top: 20, width: 400, height: 451 } },
+  // Hero cover (2026-11-16 redesign): a little wider, shown at ≤1.1× native.
+  { file: "04-studio-portrait.jpg", out: "hero-cover", box: { left: 232, top: 20, width: 420, height: 451 } },
   // Contact background: drop the strip along the top and left edges.
   { file: "04-studio-portrait.jpg", out: "studio", box: { left: 22, top: 20, width: 814, height: 451 } },
 ];

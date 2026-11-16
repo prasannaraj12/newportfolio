@@ -8,13 +8,13 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 /** Each volume on the shelf gets its own height and binding. */
 const VOLUMES: Record<string, { h: number; bind: string; ink: string }> = {
-  genai: { h: 100, bind: "#702c40", ink: "#f5efe6" },
-  finetune: { h: 88, bind: "#8a3c52", ink: "#f5efe6" },
-  aiml: { h: 94, bind: "#e8d8d2", ink: "#702c40" },
-  backend: { h: 84, bind: "#4c4140", ink: "#f5efe6" },
-  lang: { h: 76, bind: "#c6a77b", ink: "#4c4140" },
-  frontend: { h: 90, bind: "#a75b68", ink: "#f5efe6" },
-  tools: { h: 80, bind: "#efe6da", ink: "#702c40" },
+  genai: { h: 100, bind: "#741f38", ink: "#f7f1e9" },
+  finetune: { h: 88, bind: "#8a3c52", ink: "#f7f1e9" },
+  aiml: { h: 94, bind: "#e8d8d2", ink: "#741f38" },
+  backend: { h: 84, bind: "#292322", ink: "#f7f1e9" },
+  lang: { h: 76, bind: "#c9a777", ink: "#292322" },
+  frontend: { h: 90, bind: "#b77b85", ink: "#f7f1e9" },
+  tools: { h: 80, bind: "#efe6da", ink: "#741f38" },
 };
 
 /**
@@ -96,7 +96,7 @@ export function Intelligence() {
               })}
             </div>
             {/* shelf board */}
-            <div aria-hidden className="h-3 bg-[#d9cfc3] shadow-[0_18px_30px_-18px_rgba(76,65,64,0.45)]" />
+            <div aria-hidden className="h-3 bg-[#e4d5ca] shadow-[0_18px_30px_-18px_rgba(76,65,64,0.45)]" />
             <p className="mt-4 text-[0.72rem] text-titanium-500">Use ← → to move along the shelf.</p>
           </div>
 
